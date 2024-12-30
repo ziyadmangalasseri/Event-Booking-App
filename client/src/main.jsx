@@ -1,20 +1,35 @@
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter,RouterProvider, Outlet } from "react-router-dom";
+import { createBrowserRouter,RouterProvider } from "react-router-dom";
 import { Error } from "./components/Error";
-import Login from "./components/login";
-import AppLayout from "./components/AppLayout";
+import Login from "./components/Login";
+import Body from "./components/body";
+import Dashboard from "./components/admin/Dashboard";
+import { Outlet } from "react-router-dom";
 
+
+// const AppLayout = () => {
+//   return (
+//     <div id="app">
+//       <Body />
+//       <Outlet />
+//     </div>
+//   );
+// };
 
 
 const appRouter = createBrowserRouter([
   {
     path:"/",
-    element:<AppLayout/>,
+    element:<Body/>,
     children:[
       {
         path:"/",
         element:<Login/>,
       },
+      {
+        path:"/dashboard",
+        element:<Dashboard/>,
+      }
     ],
     errorElement : <Error/>
   },
