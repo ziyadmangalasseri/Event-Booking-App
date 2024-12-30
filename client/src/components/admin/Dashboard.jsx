@@ -16,7 +16,7 @@ const Dashboard = () => {
           to="/showemployeespage"
           className="w-11/12 rounded-xl py-1 h-[50px]"
         >
-          <button className="w-full h-full rounded-lg bg-black text-white font-bold py-2 hover:bg-gray-200 hover:text-black">
+          <button className="w-full h-full rounded-xl bg-black text-white font-bold py-2 hover:bg-gray-200 hover:text-black active:bg-green-400">
             All Employee
           </button>
         </Link>
@@ -24,7 +24,7 @@ const Dashboard = () => {
           to="/showEventPage"
           className="w-11/12 rounded-xl py-1 h-[50px]"
         >
-          <button className="w-full h-full rounded-lg bg-black text-white font-bold py-2 hover:bg-gray-200 hover:text-black">
+          <button className="w-full h-full rounded-xl bg-black text-white font-bold py-2 hover:bg-gray-200 hover:text-black active:bg-green-400">
             Events
           </button>
         </Link>
@@ -32,7 +32,7 @@ const Dashboard = () => {
           to="/addEmployee"
           className="w-11/12 rounded-xl py-1 h-[50px]"
         >
-          <button className="w-full h-full rounded-lg bg-black text-white font-bold py-2 hover:bg-gray-200 hover:text-black">
+          <button className="w-full h-full rounded-xl bg-black text-white font-bold py-2 hover:bg-gray-200 hover:text-black active:bg-green-400">
             Add Employee
           </button>
         </Link>
@@ -40,13 +40,13 @@ const Dashboard = () => {
           to="/contact"
           className="w-11/12 rounded-xl py-1 h-[50px]"
         >
-          <button className="w-full h-full rounded-xl bg-black text-white font-bold py-2 hover:bg-gray-200 hover:text-black">
+          <button className="w-full h-full rounded-xl bg-black text-white font-bold py-2 hover:bg-gray-200 hover:text-black active:bg-green-400">
             Contact Us
           </button>
         </Link>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="w-11/12 rounded-xl h-[50px] bg-black text-white font-bold py-2 hover:bg-gray-200 hover:text-black"
+          className="w-11/12 rounded-xl h-[45px] bg-black text-white font-bold py-2 hover:bg-gray-200 hover:text-black active:bg-red-400"
         >
           Log Out
         </button>
