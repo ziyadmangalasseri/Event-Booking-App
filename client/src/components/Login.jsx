@@ -1,4 +1,5 @@
 import { useState } from "react";
+import AlfaLogo from "./AlfaLogo";
 
 const Login = () => {
   const [userId, setUserId] = useState("");
@@ -37,6 +38,8 @@ const Login = () => {
   };
 
   return (
+    <div>
+     <AlfaLogo/>
     <div className="p-6 h-[60%] bg-black bg-opacity-30 my-2">
       <form onSubmit={handleSubmit}>
         <div className="w-[100%] h-[100%] flex-col">
@@ -88,6 +91,7 @@ const Login = () => {
           </div>
         </div>
       </form>
+    </div>
     </div>
   );
 };

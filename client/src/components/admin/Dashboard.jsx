@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import AlfaLogo from "../AlfaLogo";
+
 
 const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,10 +12,11 @@ const Dashboard = () => {
 
   return (
     <div className="p-2 justify-around">
+      <AlfaLogo/>
       {/* Details Section */}
       <div className="details-div py-6 flex flex-col items-center space-y-4">
         <Link
-          to="/showemployeespage"
+          to="/employees"
           className="w-11/12 rounded-xl py-1 h-[50px]"
         >
           <button className="w-full h-full rounded-xl bg-black text-white font-bold py-2 hover:bg-gray-200 hover:text-black active:bg-green-400">
