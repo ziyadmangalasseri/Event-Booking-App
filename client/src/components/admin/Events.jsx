@@ -1,4 +1,4 @@
-const Events = (employees) => {
+const Events = (events) => {
 
     const backbutton = () => {
         window.history.back()
@@ -6,12 +6,12 @@ const Events = (employees) => {
   return (
       <div>
         <div className="text-center py-4">
-          <h3 className="text-2xl font-bold mb-2">Employee List</h3>
+          <h3 className="text-2xl font-bold mb-2">Event List</h3>
         </div>
 
         <div className="bg-black/60 p-5 h-[470px] flex flex-col overflow-y-auto scrollbar-hide">
-          {employees?.length > 0 ? (
-            employees?.map((employee, index) => (
+          {events?.length > 0 ? (
+            events?.map((employee, index) => (
               <a
                 key={employee._id}
                 href={`/showEmployeeDetails/${employee._id}`}
@@ -28,7 +28,7 @@ const Events = (employees) => {
               </a>
             ))
           ) : (
-            <p className="text-center">No Employees are available.</p>
+            <p className="text-center">No events are available.</p>
           )}
         </div>
 
