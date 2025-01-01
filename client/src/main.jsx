@@ -7,6 +7,8 @@ import Dashboard from "./components/admin/Dashboard";
 import { Outlet } from "react-router-dom";
 import EmployeeList from "./components/admin/EmployeeList";
 import Events from "./components/admin/Events";
+import AddEmployee from "./components/admin/AddEmployee";
+
 
 // const AppLayout = () => {
 //   return (
@@ -38,6 +40,10 @@ const appRouter = createBrowserRouter([
       {
         path:"/events",
         element:<Events/>,
+      },
+      {
+        path:"/addEmployee",
+        element:<AddEmployee/>,
       },
     ],
     errorElement : <Error/>

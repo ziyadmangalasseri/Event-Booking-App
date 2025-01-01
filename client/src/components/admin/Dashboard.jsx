@@ -24,7 +24,7 @@ const Dashboard = () => {
           </button>
         </Link>
         <Link
-          to="/showEventPage"
+          to="/events"
           className="w-11/12 rounded-xl py-1 h-[50px]"
         >
           <button className="w-full h-full rounded-xl bg-black text-white font-bold py-2 hover:bg-gray-200 hover:text-black active:bg-green-400">
@@ -57,25 +57,26 @@ const Dashboard = () => {
 
       {/* Custom Modal for Logout Confirmation */}
       {isModalOpen && (
-        <div className="modal-overlay fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="modal-content bg-white p-5 rounded-lg text-center w-11/12 max-w-md shadow-lg">
-            <p className="text-lg mb-4">Are you sure you want to log out?</p>
-            <div className="flex justify-center space-x-4">
-              <button
-                onClick={handleLogout}
-                className="modal-btn bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-              >
-                Log Out
-              </button>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="modal-btn bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500"
-              >
-                Cancel
-              </button>
-            </div>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-white p-6 rounded-lg text-center w-11/12 max-w-md shadow-lg">
+          <p className="text-lg font-bold mb-6 text-black">Are you sure you want to log out?</p>
+          <div className="flex flex-col space-y-4">
+            <button
+              onClick={handleLogout}
+              className="w-full py-3 bg-red-500 text-white font-bold rounded hover:bg-red-600"
+            >
+              Log Out
+            </button>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="w-full py-3 bg-gray-400 text-white font-bold rounded hover:bg-gray-500"
+            >
+              Cancel
+            </button>
           </div>
         </div>
+      </div>
+      
       )}
     </div>
   );
