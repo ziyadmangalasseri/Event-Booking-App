@@ -12,6 +12,9 @@ import Home from "./components/employee/Home";
 import ProfilePage from "./components/employee/ProfilePage";
 import AvailableEvents from "./components/employee/AvailableEvents";
 import BookedEvents from "./components/employee/BookedEvents";
+import AddEvent from "./components/admin/AddEvent";
+import EmployeeDetails from "./components/admin/EmployeeDetails";
+
 
 // const AppLayout = () => {
 //   return (
@@ -63,6 +66,14 @@ const appRouter = createBrowserRouter([
       {
         path:"/bookedEvents",
         element:<BookedEvents/>,
+      },
+      {
+        path:"/addEvent",
+        element:<AddEvent/>,
+      },
+      {
+        path:"/showEmployeeDetails/:id",
+        element:<EmployeeDetails/>,
       },
     ],
     errorElement : <Error/>

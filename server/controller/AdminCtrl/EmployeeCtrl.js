@@ -95,12 +95,14 @@ const employeeDetails = async (req, res) => {
       DateOfBirth: new Date(employee.DateOfBirth).toISOString().split("T")[0],
     };
 
-    res.render("admin/employeeDetails", { employee: formattedEmployee });
+    // Send employee data as JSON
+    res.json(formattedEmployee);
   } catch (error) {
     console.error(error);
     res.status(500).send("Failed to load employee data");
   }
 };
+
 const editEmployeePage = async (req, res) => {
   try {
     const employeeId = req.params.id;

@@ -81,7 +81,7 @@ const login = (req, res) => {
 const userLogin = async (req, res) => {
   // console.log("User login process started");
   const { userId, password } = req.body;
-  console.log("Login attempt with:", req.body);
+  // console.log("Login attempt with:", req.body);
 
   try {
     const findUser = await User.findOne({ userId: userId });
