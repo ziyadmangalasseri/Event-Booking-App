@@ -12,24 +12,29 @@ const AddEventPage = async (req, res) => {
 
 const ShowEventPage = async (req, res) => {
   try {
-    const event = await Event.find();
+    const events = await Event.find();
+    // console.log(events);
 
-    event.forEach((event) => {
+    const formattedEvents = events.map((event) => {
       const date = new Date(event.date);
-      event.formattedDate = date.toLocaleString("en-IN", {
-        weekday: "short",
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
+      return {
+        ...event._doc, // Spread the event properties (specific to Mongoose documents)
+        formattedDate: date.toLocaleString("en-IN", {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        }),
+      };
     });
-    res.render("admin/showEventPage", { event });
+
+    res.json({ success: true, event: formattedEvents });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ success: false, message: "Internal Server error" });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 
@@ -44,8 +49,8 @@ const EventdetailsPage = async (req, res) => {
     }
 
     const event = await Event.findById(eventId).populate(
-      "currentEmployers", 
-      "name userId CompletedEvents" 
+      "currentEmployers",
+      "name userId CompletedEvents"
     );
 
     if (event) {
@@ -62,18 +67,15 @@ const EventdetailsPage = async (req, res) => {
 
       if (event.expirationTime) {
         const expirationTime = new Date(event.expirationTime);
-        event.formattedexpirationTime = expirationTime.toLocaleString(
-          "en-IN",
-          {
-            weekday: "short",
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          }
-        );
+        event.formattedexpirationTime = expirationTime.toLocaleString("en-IN", {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
       }
     }
 
@@ -83,7 +85,6 @@ const EventdetailsPage = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-
 
 const EditEventPage = async (req, res) => {
   try {
@@ -106,7 +107,6 @@ const EditEventPage = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-
 
 const AddEvent = async (req, res) => {
   const adminId = req.session.userDataId;
@@ -131,7 +131,6 @@ const AddEvent = async (req, res) => {
       jobDescription: jobDescription,
       employerLimit: employerLimit,
       // expirationTime: formattedExpirationTime,
-     
     });
     await newEvent.save();
     res.status(200).json({
@@ -170,13 +169,11 @@ const EditEvent = async (req, res) => {
       // expirationTime,
     });
     await newEvent.save();
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Event successfully edited",
-        redirectUrl: "/showEventPage",
-      });
+    res.status(200).json({
+      success: true,
+      message: "Event successfully edited",
+      redirectUrl: "/showEventPage",
+    });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ success: false, message: "Internal server error" });
@@ -185,7 +182,7 @@ const EditEvent = async (req, res) => {
 
 const DeleteEvent = async (req, res) => {
   try {
-    const eventId = req.params.id; 
+    const eventId = req.params.id;
     if (!eventId) {
       return res.status(400).json({ error: "Invalid event ID" });
     }

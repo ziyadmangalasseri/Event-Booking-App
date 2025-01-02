@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
@@ -44,20 +45,20 @@ const EmployeeList = () => {
       <div className="bg-black/60 p-5 h-[470px] flex flex-col overflow-y-auto scrollbar-none">
         {employees?.length > 0 ? (
           employees?.map((employee, index) => (
-            <a
+            <Link
               key={employee._id}
-              href={`/showEmployeeDetails/${employee._id}`}
+              to={`/showEmployeeDetails/${employee._id}`}
               className="block mb-3"
             >
-              <div className="flex justify-between items-center bg-white/10 rounded-lg p-4">
+              <div className="flex justify-between items-center bg-white/10 rounded-lg p-4 h-[50px]">
                 <div>
                   <h6 className="uppercase font-medium">
                     {index + 1}. {employee.name}
                   </h6>
-                  <h6 className="text-sm">ID: {employee.userId}</h6>
+                  <h6 className="text-sm">Id: {employee.userId}</h6>
                 </div>
               </div>
-            </a>
+            </Link>
           ))
         ) : (
           <p className="text-center">No Employees are available.</p>
