@@ -8,16 +8,22 @@ const showEvents = async (req, res) => {
     const events = await Event.find();
 
     // Fetch the logged-in employee's details (assuming req.user contains the authenticated user)
-    const employee = await User.findById(req.session.userDataId).populate("myEvents");
+    const employee = await User.findById(req.session.userDataId).populate(
+      "myEvents"
+    );
 
     // Get IDs of booked events
-    const bookedEventIds = employee.myEvents.map(event => event._id.toString());
+    const bookedEventIds = employee.myEvents.map((event) =>
+      event._id.toString()
+    );
 
     // Filter out events that are already booked by the employee
-    const upcomingEvents = events.filter(event => !bookedEventIds.includes(event._id.toString()));
+    const upcomingEvents = events.filter(
+      (event) => !bookedEventIds.includes(event._id.toString())
+    );
 
     // Format event dates
-    upcomingEvents.forEach(event => {
+    upcomingEvents.forEach((event) => {
       const date = new Date(event.date);
       event.formattedDate = date.toLocaleString("en-IN", {
         weekday: "short",
@@ -37,7 +43,6 @@ const showEvents = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server error" });
   }
 };
-
 
 const userEventDetails = async (req, res) => {
   try {
@@ -127,7 +132,7 @@ const bookEvent = async (req, res) => {
   try {
     const eventId = req.params.id;
     const userId = req.session?.userDataId;
-    
+
     // console.log("User ID:", userId);
     // console.log("Event ID:", eventId);
 
@@ -140,7 +145,7 @@ const bookEvent = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(eventId)) {
       return res.status(400).json({ error: "Invalid Event ID format" });
     }
-    
+
     const event = await Event.findById(eventId);
     if (!event) {
       return res.status(404).json({ error: "Event not found" });
@@ -153,7 +158,7 @@ const bookEvent = async (req, res) => {
 
     await Event.findByIdAndUpdate(
       eventId,
-      { $addToSet: { currentEmployers: userId } }, 
+      { $addToSet: { currentEmployers: userId } },
       { new: true }
     );
 
@@ -172,7 +177,6 @@ const bookEvent = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 const bookedEvents = async (req, res) => {
   try {
     const userId = req.session.userDataId;
@@ -194,10 +198,11 @@ const bookedEvents = async (req, res) => {
       expirationTime: event.expirationTime,
     }));
 
-    res.render("user/bookedEventsPage", { events });
+    // Always send a valid array
+    res.json({ events: events || [] });
   } catch (err) {
     console.error("Error:", err.stack);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 

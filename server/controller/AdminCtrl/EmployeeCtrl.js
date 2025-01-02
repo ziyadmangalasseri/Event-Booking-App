@@ -69,7 +69,9 @@ const addEmployee = async (req, res) => {
 const renderallemployees = async (req, res) => {
   try {
     const allemployees = await EmployeeModel.find();
-    res.render("admin/showEmployees", { employees: allemployees });
+    // console.log(allemployees);
+    
+    res.status(200).json({employees : allemployees})
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve employees" });
   }

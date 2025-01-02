@@ -166,13 +166,13 @@ const AddEmployee = () => {
         <button
           type="button"
           onClick={() => window.history.back()}
-          className="w-2/5 bg-yellow-500 text-white p-2 m-auto rounded hover:bg-yellow-300"
+          className="w-2/5 bg-yellow-500 text-white p-2 m-auto rounded-xl hover:bg-yellow-300"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="w-2/5 bg-green-800 text-white p-2 m-auto rounded hover:bg-green-400"
+          className="w-2/5 bg-green-800 text-white p-2 m-auto rounded-xl hover:bg-green-400"
         >
           Create
         </button>

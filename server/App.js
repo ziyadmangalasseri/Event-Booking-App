@@ -38,8 +38,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(cors
   ({
-  origin:["http://localhost:3000","https://alfa-events-site-booking.onrender.com"],
-  methods:["GET","POST"]
+  origin:["http://localhost:3000","http://localhost:5173"],
+  methods:["GET","POST"],
+  credentials: true
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

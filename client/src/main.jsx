@@ -8,7 +8,10 @@ import { Outlet } from "react-router-dom";
 import EmployeeList from "./components/admin/EmployeeList";
 import Events from "./components/admin/Events";
 import AddEmployee from "./components/admin/AddEmployee";
-
+import Home from "./components/employee/Home";
+import ProfilePage from "./components/employee/ProfilePage";
+import AvailableEvents from "./components/employee/AvailableEvents";
+import BookedEvents from "./components/employee/BookedEvents";
 
 // const AppLayout = () => {
 //   return (
@@ -44,6 +47,22 @@ const appRouter = createBrowserRouter([
       {
         path:"/addEmployee",
         element:<AddEmployee/>,
+      },
+      {
+        path:"/home",
+        element:<Home/>,
+      },
+      {
+        path:"/profilePage",
+        element:<ProfilePage/>,
+      },
+      {
+        path:"/availableEvents",
+        element:<AvailableEvents/>,
+      },
+      {
+        path:"/bookedEvents",
+        element:<BookedEvents/>,
       },
     ],
     errorElement : <Error/>
