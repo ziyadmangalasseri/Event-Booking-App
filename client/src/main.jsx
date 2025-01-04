@@ -14,7 +14,8 @@ import AvailableEvents from "./components/employee/AvailableEvents";
 import BookedEvents from "./components/employee/BookedEvents";
 import AddEvent from "./components/admin/AddEvent";
 import EmployeeDetails from "./components/admin/EmployeeDetails";
-
+import EditEmployee from "./components/admin/EditEmployee";
+import ChangePassword from "./components/admin/ChangePassword";
 
 // const AppLayout = () => {
 //   return (
@@ -74,6 +75,14 @@ const appRouter = createBrowserRouter([
       {
         path:"/showEmployeeDetails/:id",
         element:<EmployeeDetails/>,
+      },
+      {
+        path:"/editEmployee/:id",
+        element:<EditEmployee/>,
+      },
+      {
+        path:"/changePassword/:id",
+        element:<ChangePassword/>,
       },
     ],
     errorElement : <Error/>

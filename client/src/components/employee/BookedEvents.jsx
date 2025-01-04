@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -11,7 +11,9 @@ const BookedEvents = () => {
     // Fetch events from the backend
     const fetchEvents = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/bookedEvents`);
+        const response = await axios.get(`${backendUrl}/bookedEvents`, {
+          withCredentials: true,
+        });
         const eventsData = response.data.events;
         setEvents(Array.isArray(eventsData) ? eventsData : []);
       } catch (error) {
@@ -54,7 +56,6 @@ const BookedEvents = () => {
         ) : (
           <p className="text-center">No events booked yet.</p>
         )}
-       
       </div>
       <div className="flex justify-center p-4">
         <button
