@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useParams, useNavigate } from "react-router-dom";  // Updated import
+import { useParams, useNavigate } from "react-router-dom"; // Updated import
+import { Link } from "react-router-dom";
 
 const EmployeeDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();  // Updated hook
+  const navigate = useNavigate(); // Updated hook
   const [employee, setEmployee] = useState(null);
+  const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     const fetchEmployeeDetails = async () => {
       try {
-        const response = await axios.get(`/showEmployeeDetails/${id}`);
+        const response = await axios.get(
+          `${backendUrl}/showEmployeeDetails/${id}`,
+          { withCredentials:true }
+        );
         setEmployee(response.data);
       } catch (error) {
         console.error("Failed to fetch employee data", error);
@@ -34,14 +39,16 @@ const EmployeeDetails = () => {
 
     if (confirmation.isConfirmed) {
       try {
-        const response = await axios.delete(`/deleteEmployee/${id}`);
+        const response = await axios.delete(
+          `${backendUrl}/deleteEmployee/${id}`
+        );
         if (response.status === 200) {
           await Swal.fire({
             title: "Deleted!",
             text: "Employee has been deleted.",
             icon: "success",
           });
-          navigate("/showemployeespage");  // Updated navigation
+          navigate("/showemployeespage");
         }
       } catch (error) {
         console.error("Error deleting employee:", error);
@@ -61,60 +68,92 @@ const EmployeeDetails = () => {
       <div className="text-center py-4">
         <h3 className="text-center mb-4 text-2xl">Employee Details</h3>
         <div className="bg-black/60 p-5 h-[470px] flex flex-col overflow-y-auto scrollbar-none">
-
-        <ul className="space-y-4">
-          <li className="flex justify-between">
-            <span className="font-semibold">Name:</span>
-            <span>{employee.name}</span>
-          </li>
-          <li className="flex justify-between">
-            <span className="font-semibold">User Id:</span>
-            <span>{employee.userId}</span>
-          </li>
-          <li className="flex justify-between">
-            <span className="font-semibold">Phone Number:</span>
-            <span>{employee.number}</span>
-          </li>
-          <li className="flex justify-between">
-            <span className="font-semibold">Place:</span>
-            <span>{employee.place}</span>
-          </li>
-          <li className="flex justify-between">
-            <span className="font-semibold">Completed Events:</span>
-            <span>{employee.CompletedEvents ? employee.CompletedEvents.length : 0}</span>
-          </li>
-          <li className="flex justify-between">
-            <span className="font-semibold">Joining Date:</span>
-            <span>{employee.JoiningDate}</span>
-          </li>
-          <li className="flex justify-between">
-            <span className="font-semibold">Date of Birth:</span>
-            <span>{employee.DateOfBirth}</span>
-          </li>
-          <li className="flex justify-between">
-            <span className="font-semibold">Blood Group:</span>
-            <span>{employee.BloodGroup}</span>
-          </li>
-        </ul>
+          <ul className="w-full flex flex-col justify-center items-center gap-6 my-4">
+            <li className="info-item flex justify-between w-full text-sm">
+              <span className="label font-bold flex-[0.8] text-left text-base">
+                Name
+              </span>
+              <span className="value flex-1 text-left text-white pl-2">
+                : {employee.name}
+              </span>
+            </li>
+            <li className="info-item flex justify-between w-full text-sm">
+              <span className="label font-bold flex-[0.8] text-left text-base">
+                User Id
+              </span>
+              <span className="value flex-1 text-left text-white pl-2">
+                : {employee.userId}
+              </span>
+            </li>
+            <li className="info-item flex justify-between w-full text-sm">
+              <span className="label font-bold flex-[0.8] text-left text-base">
+                Phone Number
+              </span>
+              <span className="value flex-1 text-left text-white pl-2">
+                : {employee.number}
+              </span>
+            </li>
+            <li className="info-item flex justify-between w-full text-sm">
+              <span className="label font-bold flex-[0.8] text-left text-base">
+                Place
+              </span>
+              <span className="value flex-1 text-left text-white pl-2">
+                : {employee.place}
+              </span>
+            </li>
+            <li className="info-item flex justify-between w-full text-sm">
+              <span className="label font-bold flex-[0.8] text-left text-base">
+                Completed Events
+              </span>
+              <span className="value flex-1 text-left text-white pl-2">
+                :{" "}
+                {employee.CompletedEvents ? employee.CompletedEvents.length : 0}
+              </span>
+            </li>
+            <li className="info-item flex justify-between w-full text-sm">
+              <span className="label font-bold flex-[0.8] text-left text-base">
+                Joining Date
+              </span>
+              <span className="value flex-1 text-left text-white pl-2">
+                : {new Date(employee.JoiningDate).toDateString()}
+              </span>
+            </li>
+            <li className="info-item flex justify-between w-full text-sm">
+              <span className="label font-bold flex-[0.8] text-left text-base">
+                Date Of Birth
+              </span>
+              <span className="value flex-1 text-left text-white pl-2">
+                : {new Date(employee.DateOfBirth).toDateString()}
+              </span>
+            </li>
+            <li className="info-item flex justify-between w-full text-sm">
+              <span className="label font-bold flex-[0.8] text-left text-base">
+                Blood Group
+              </span>
+              <span className="value flex-1 text-left text-white pl-2">
+                : {employee.BloodGroup}
+              </span>
+            </li>
+          </ul>
         </div>
-        <div className="m-auto flex justify-around py-4 w-[90%]">
-        <button
-            className="bg-green-800 w-[40%] text-white px-4 py-2 rounded-lg hover:bg-green-600"
-            onClick={() => navigate(`/editEmployee/${employee._id}`)}  // Updated navigation
+        <div className="m-auto flex justify-around py-4 px-1 w-[100%]">
+          <button
+            className="bg-yellow-600 w-[30%] text-white px-4 py-2 rounded-lg hover:bg-yellow-400"
+            onClick={() => history.back()} // Updated navigation
+          >
+            Back
+          </button>
+          <Link
+            to={`/editEmployee/${id}`}
+            className="bg-green-800 w-[30%] text-white px-4 py-2 rounded-lg hover:bg-green-600"
           >
             Edit
-          </button>
+          </Link>
           <button
-            className="bg-red-700 w-[40%] text-white px-4 py-2 rounded-lg hover:bg-red-600"
+            className="bg-red-700 w-[30%] text-white px-4 py-2 rounded-lg hover:bg-red-600"
             onClick={deleteEmployee}
           >
             Delete
-          </button>
-          <button
-            className="bg-yellow-500 w-[40%] text-white px-4 py-2 rounded-lg hover:bg-yellow-400"
-            onClick={() => navigate("/showemployeespage")}  // Updated navigation
-          >
-            Back
           </button>
         </div>
       </div>

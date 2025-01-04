@@ -70,8 +70,8 @@ const renderallemployees = async (req, res) => {
   try {
     const allemployees = await EmployeeModel.find();
     // console.log(allemployees);
-    
-    res.status(200).json({employees : allemployees})
+
+    res.status(200).json({ employees: allemployees });
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve employees" });
   }
@@ -84,6 +84,7 @@ const employeeDetails = async (req, res) => {
       return res.status(400).send("Invalid Employee ID");
     }
     const employee = await EmployeeModel.findById(employeeId);
+    // console.log(employee);
 
     if (!employee) {
       return res.status(404).send("Employee not found");
@@ -96,7 +97,7 @@ const employeeDetails = async (req, res) => {
     };
 
     // Send employee data as JSON
-    res.json(formattedEmployee);
+    res.status(200).json(formattedEmployee);
   } catch (error) {
     console.error(error);
     res.status(500).send("Failed to load employee data");
@@ -108,46 +109,50 @@ const editEmployeePage = async (req, res) => {
     const employeeId = req.params.id;
     if (employeeId) {
       const employee = await EmployeeModel.findById(employeeId);
-      const formattedEmployee = {
-        ...employee._doc,
-        JoiningDate: new Date(employee.JoiningDate).toISOString().split("T")[0],
-        DateOfBirth: new Date(employee.DateOfBirth).toISOString().split("T")[0],
-      };
+      console.log(employee);
+
       if (employee) {
-        res.render("admin/editEmployee", { employee: formattedEmployee });
+        // Return the employee data
+        res.status(200).json(employee);
       } else {
-        return res
-          .status(400)
-          .json({ success: false, message: "employee id is error" });
+        return res.status(404).json({ message: "Employee not found" });
       }
     } else {
-      return res
-        .status(400)
-        .json({ success: false, message: "employee id is not recived" });
+      return res.status(400).json({ message: "Employee ID is required" });
     }
   } catch (err) {
     console.error(err.message);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 const editEmployee = async (req, res) => {
   try {
-    const employeeId = req.params.id;
-    if (!employeeId) {
+    const { id } = req.params;
+
+    // Validate employee ID
+    if (!id) {
       return res.status(400).json({ error: "Invalid Employee ID" });
     }
 
+    const updatedData = {
+      name: req.body.name,
+      userId: req.body.userId,
+      number: req.body.number,
+      place: req.body.place,
+      JoiningDate: req.body.JoiningDate,
+      DateOfBirth: req.body.DateOfBirth,
+      BloodGroup: req.body.BloodGroup,
+    };
+
+    // Validate input data
+    if (!updatedData.name || !updatedData.userId || !updatedData.number) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
     const updatedEmployee = await EmployeeModel.findByIdAndUpdate(
-      employeeId,
-      {
-        name: req.body.name,
-        userId: req.body.userId,
-        number: req.body.number,
-        place: req.body.place,
-        JoiningDate: req.body.JoiningDate,
-        DateOfBirth: req.body.DateOfBirth,
-        BloodGroup: req.body.BloodGroup,
-      },
+      id,
+      updatedData,
       { new: true }
     );
 
@@ -155,7 +160,11 @@ const editEmployee = async (req, res) => {
       return res.status(404).json({ error: "Employee not found" });
     }
 
-    res.json({ success: true, employee: updatedEmployee });
+    res.json({
+      success: true,
+      message: "Employee updated successfully",
+      employee: updatedEmployee,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to update employee details" });
@@ -355,7 +364,6 @@ const makeAdmin = async (req, res) => {
   }
 };
 
-
 const removeAdmin = async (req, res) => {
   try {
     const employeeId = req.params.id;
@@ -391,5 +399,5 @@ module.exports = {
   employeeReported,
   unReportEmployee,
   makeAdmin,
-  removeAdmin
+  removeAdmin,
 };
