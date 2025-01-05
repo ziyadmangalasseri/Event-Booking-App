@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
+import { useParams } from "react-router-dom";
 
 const ChangePassword = () => {
+  const { id } = useParams();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,19 +19,23 @@ const ChangePassword = () => {
     }
 
     try {
-      const response = await fetch("/updatePassword/<%= employee._id %>", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ newPassword, confirmPassword }),
-      });
+      const response = await fetch(
+        `${backendUrl}/updatePassword/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ newPassword }),
+          credentials: "include",
+        }
+      );
 
       const result = await response.json();
 
       if (response.ok) {
         Swal.fire("Success", result.message, "success").then(() => {
-          window.location.href = "/showemployeespage";
+          history.back();
         });
       } else {
         Swal.fire("Error", result.error || "An error occurred", "error");
@@ -41,14 +48,14 @@ const ChangePassword = () => {
 
   return (
     <div>
-      <div className="text-center py-2">
-        <h3 className="text-center text-2xl font-semibold mb-6">
+      <div className="py-5">
+        <h3 className="text-center text-2xl font-semibold mb-4">
           Change Password
         </h3>
         <form onSubmit={handleSubmit}>
           <div className="bg-black/60 p-10 h-[470px] flex flex-col overflow-y-auto scrollbar-none justify-center">
             {/* New Password */}
-            <div className="relative">
+            <div className="relative h-[100px]">
               <label className="block text-white mb-1">New Password</label>
               <input
                 type={showNewPassword ? "text" : "password"}
@@ -68,10 +75,8 @@ const ChangePassword = () => {
             </div>
 
             {/* Confirm Password */}
-            <div className="relative">
-              <label className="block text-sm font-medium">
-                Confirm Password
-              </label>
+            <div className="relative h-[100px]">
+              <label className="block font-medium">Confirm Password</label>
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
@@ -83,7 +88,7 @@ const ChangePassword = () => {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute top-1/2 right-3 transform -translate-y-1/2 text-lg"
+                className="absolute top-11 right-3 transform -translate-y-1/2 text-lg"
               >
                 {showConfirmPassword ? "🙈" : "👁️"}
               </button>
@@ -91,17 +96,17 @@ const ChangePassword = () => {
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-center space-x-4 mt-6">
+          <div className="flex justify-center space-x-4 mt-4">
             <button
               type="button"
               onClick={() => window.history.back()}
-              className="px-6 py-2 bg-red-500 hover:bg-red-600 rounded text-white"
+              className="px-6 py-2 bg-red-700 hover:bg-red-600 rounded-lg text-white"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-green-500 hover:bg-green-600 rounded text-white"
+              className="px-6 py-2 bg-green-700 hover:bg-green-600 rounded-lg text-white"
             >
               Update
             </button>

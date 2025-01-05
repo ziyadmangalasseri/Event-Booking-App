@@ -13,6 +13,7 @@ const EditEmployee = () => {
     JoiningDate: "",
     DateOfBirth: "",
     BloodGroup: "",
+    isAdmin:""
   });
 
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
@@ -37,6 +38,7 @@ const EditEmployee = () => {
               ? new Date(data.DateOfBirth).toISOString().split("T")[0]
               : "",
             BloodGroup: data.BloodGroup,
+            isAdmin:data.isAdmin
           });
         } else {
           Swal.fire(
@@ -115,6 +117,7 @@ const EditEmployee = () => {
       const response = await fetch(endpoint, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
+        credentials : "include"
       });
 
       const result = await response.json();
