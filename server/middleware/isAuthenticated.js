@@ -1,18 +1,22 @@
  const userisAuthenticated = (req, res, next) => {
 
   if (req.session.userisLoggedIn) {
-    next(); // Proceed to the next middleware or route handler
+    res.json({isAuthenticated:true})
+    // next(); // Proceed to the next middleware or route handler
   } else {
-    res.redirect("/"); // Redirect to login page if not logged in
+    res.json({isAuthenticated:false})
+    // res.redirect("/"); // Redirect to login page if not logged in
   }
 };
 
 const adminisAuthenticated = (req, res, next) => {
 
   if (req.session.adminisLoggedIn) {
-    next(); // Proceed to the next middleware or route handler
+    res.json({isAuthenticated:true})
+    // next(); // Proceed to the next middleware or route handler
   } else {
-    res.redirect("/"); // Redirect to login page if not logged in
+    res.json({isAuthenticated:false})
+    // res.redirect("/"); // Redirect to login page if not logged in
   }
 };
 

@@ -6,8 +6,22 @@ import AlfaLogo from "../AlfaLogo";
 const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleLogout = () => {
-    window.location.href = "/logout";
+  const handleLogout = async () => {
+    try{
+      const response = await fetch("/logout",{
+        method:"GET",
+        credentials : "include",
+      })
+      if(response.ok){
+        window.location.href = "/";
+      }else{
+        console.error("Logout failed");
+        
+      }
+    }catch(error){
+      console.error("Error during logout:",error);
+      
+    }
   };
 
   return (

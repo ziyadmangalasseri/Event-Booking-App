@@ -16,6 +16,12 @@ import AddEvent from "./components/admin/AddEvent";
 import EmployeeDetails from "./components/admin/EmployeeDetails";
 import EditEmployee from "./components/admin/EditEmployee";
 import ChangePassword from "./components/admin/ChangePassword";
+import EventDetails from "./components/admin/EventDetails";
+import EditEvent from "./components/admin/EditEvent";
+
+
+
+
 
 // const AppLayout = () => {
 //   return (
@@ -83,6 +89,14 @@ const appRouter = createBrowserRouter([
       {
         path:"/changePassword/:id",
         element:<ChangePassword/>,
+      },
+      {
+        path:"/eventDetails/:id",
+        element:<EventDetails/>,
+      },
+      {
+        path:"/editEvent/:id",
+        element:<EditEvent/>,
       },
     ],
     errorElement : <Error/>
