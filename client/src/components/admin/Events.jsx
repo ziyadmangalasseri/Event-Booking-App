@@ -4,31 +4,26 @@ import { Link } from "react-router-dom";
 const EventList = () => {
   const [events, setEvents] = useState([]);
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
-  // console.log(backendUrl);
 
-  // Fetch events from backend
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const response = await fetch(`${backendUrl}/showEventPage`, {
           credentials: "include",
         });
-
         if (!response.ok) {
-          const errorText = await response.text(); // Capture response for debugging
-          throw new Error(`API error: ${errorText}`);
+          throw new Error("Failed to fetch events");
         }
-
-        const data = await response.json(); // Parse JSON response
-        // console.log("Fetched Events:", data); // Debugging
-        setEvents(data.event); // Update state with event data
+        const data = await response.json();
+        setEvents(Array.isArray(data.event) ? data.event : []);
       } catch (error) {
         console.error("Error fetching events:", error.message || error);
+        setEvents([]);
       }
     };
 
     fetchEvents();
-  }, []);
+  }, [backendUrl]);
 
   return (
     <div>
@@ -36,7 +31,7 @@ const EventList = () => {
         <h3 className="text-center text-2xl font-bold mb-2">Event List</h3>
       </div>
       <div className="bg-black/60 p-5 h-[470px] flex flex-col overflow-y-auto scrollbar-none">
-        {events.length > 0 ? (
+        {Array.isArray(events) && events.length > 0 ? (
           events.map((event) => (
             <Link
               to={`/eventDetails/${event._id}`}
@@ -60,7 +55,6 @@ const EventList = () => {
           <button
             type="button"
             onClick={() => window.history.back()}
-            className=""
           >
             Home
           </button>

@@ -2,20 +2,17 @@ const User = require("../model/userModel");
 const bcrypt = require("bcrypt");
 const { json } = require("body-parser");
 const asyncHandler = require("async-handler");
+const {generateToken} = require("../utils/jwt")
+
+
+
 
 const signup = (req, res) => {
   res.render("signup");
 };
 const logout = async (req, res) => {
-  req.session.destroy((err) => {
-    if(err){
-      console.error("Error destroyign session : " ,err);
-      return res.status(500).json({error:"Failed to log out. Please try again."})
-    }
-    res.clearCooke("connect.sid");
-    return res.status(200).json({message:"Logged out successfully."})
-  });
-  
+  req.session.destroy();
+  res.redirect("/");
 };
 const createAccount = async (req, res) => {
   try {
@@ -86,51 +83,36 @@ const login = (req, res) => {
 };
 
 const userLogin = async (req, res) => {
-  // console.log("User login process started");
   const { userId, password } = req.body;
-  // console.log("Login attempt with:", req.body);
 
   try {
     const findUser = await User.findOne({ userId: userId });
 
     if (!findUser) {
-      //  console.log("User not found");
       return res
         .status(400)
         .json({ success: false, message: "Invalid userId" });
     }
 
-    // console.log("User found");
     const isPasswordCorrect = await bcrypt.compare(password, findUser.password);
     if (!isPasswordCorrect) {
-      // console.log("Invalid password");
       return res
         .status(401)
         .json({ success: false, message: "Invalid password" });
     }
 
-    // console.log("Password verified");
+    // Generate JWT Token
+    const token = generateToken(findUser._id);
 
     const response = {
       success: true,
+      message: findUser.isAdmin
+        ? "Admin login successfully"
+        : "User login successfully",
+      redirectUrl: findUser.isAdmin ? "/dashboard" : "/home",
     };
-    if (findUser.isAdmin) {
-      req.session.adminisLoggedIn = true;
-      req.session.userId = findUser.userId;
-      req.session.userDataId = findUser._id;
 
-      response.message = "Admin login successfully";
-      response.redirectUrl = "/dashboard";
-    } else {
-      req.session.userisLoggedIn = true;
-      req.session.userId = findUser.userId;
-      req.session.userDataId = findUser._id;
-
-      response.message = "User login successfully";
-      response.redirectUrl = "/home";
-    }
-
-    res.status(200).json(response);
+    res.status(200).json({ token, response });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Internal Server Error" });
