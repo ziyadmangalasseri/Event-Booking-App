@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AlfaLogo from "./AlfaLogo";
+import axios from "axios";
 
 const Login = () => {
   const [userId, setUserId] = useState("");
@@ -8,35 +9,55 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userId || !password) {
       setErrorMessage("User ID and password are required.");
       return;
     }
 
-    fetch(`${backendUrl}/userlogin`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ userId, password }),
-    })
-      .then(async (response) => {
-        if (!response.ok) {
-          return response.json().then((data) => {
-            throw new Error(data.message || "An error occurred.");
-          });
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (!data.success) {
-          setErrorMessage(data.message);
-        } else {
-          window.location.href = data.redirectUrl;
-        }
-      })
-      .catch((err) => setErrorMessage(err.message));
+    try {
+      const response = await axios.post(
+        `${backendUrl}/userlogin`,
+        {
+          userId,
+          password,
+        },
+        { withCredentials: true }
+      );
+
+      const { token, response: serverResponse } = response.data;
+      if (serverResponse.success) {
+        // Save the JWT token in localStorage
+        localStorage.setItem("authToken", token);
+
+        // Fetch protected data after login
+        fetchProtectedData();
+
+        // Redirect to the appropriate page
+        window.location.href = serverResponse.redirectUrl;
+      } else {
+        setErrorMessage(serverResponse.message);
+      }
+    } catch (error) {
+      setErrorMessage(
+        error.response?.data?.message || "An error occurred while logging in."
+      );
+    }
+  };
+
+  const fetchProtectedData = async () => {
+    const token = localStorage.getItem("authToken");
+    try {
+      const response = await axios.get(`${backendUrl}/protected-route`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log("Protected Data:", response.data);
+    } catch (error) {
+      console.error(
+        error.response?.data?.message || "Error fetching protected data"
+      );
+    }
   };
 
   return (
