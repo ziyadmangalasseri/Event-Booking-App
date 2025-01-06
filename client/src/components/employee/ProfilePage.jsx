@@ -42,7 +42,8 @@ const ProfilePage = () => {
       {/* User Details */}
       {user ? (
         <div className="p-6 h-[100%] bg-black bg-opacity-60 my-2">
-          <ul className="w-full flex flex-col justify-center items-center gap-4 my-4">
+          <ul 
+          className="w-full flex flex-col justify-center items-center gap-4 my-4">
             <li className="info-item flex justify-between w-full text-sm">
               <span className="label font-bold flex-[0.8] text-left text-base">
                 Name

@@ -289,12 +289,11 @@ const updatePassword = async (req, res) => {
 const employeeReported = async (req, res) => {
   try {
     const { id } = req.params; // employeeId
-    const { eventId } = req.body; // eventId passed from the frontend
+    const { eventId } = req.query; 
 
-    // Find the employee and update CompletedEvents
     const employee = await EmployeeModel.findOneAndUpdate(
       { _id: id },
-      { $addToSet: { CompletedEvents: eventId } }, // Add eventId if not already present
+      { $addToSet: { CompletedEvents: eventId } },
       { new: true }
     );
 
@@ -302,43 +301,41 @@ const employeeReported = async (req, res) => {
       return res.status(404).json({ error: "Employee not found" });
     }
 
-    return res
-      .status(200)
-      .json({ message: "Event marked as completed", employee });
+    return res.status(200).json({ message: "Event marked as completed", employee });
   } catch (err) {
     console.error("Error marking event as completed:", err.message);
-    return res
-      .status(500)
-      .json({ error: "An error occurred while updating the event." });
+    return res.status(500).json({ error: "An error occurred while updating the event." });
   }
 };
 
 const unReportEmployee = async (req, res) => {
   try {
     const { id } = req.params; // employeeId
-    const { eventId } = req.body; // eventId passed from the frontend
+    const { eventId } = req.query; // eventId from query string
+    
+    if (!eventId) {
+      return res.status(400).json({ error: "Event ID is required" });
+    }
 
-    // Find the employee and update CompletedEvents
-    const employee = await EmployeeModel.findOneAndUpdate(
-      { _id: id },
-      { $pull: { CompletedEvents: eventId } }, // Remove eventId from CompletedEvents
-      { new: true }
-    );
-
+    // Logic to unreport the employee
+    const employee = await EmployeeModel.findById(id);
     if (!employee) {
       return res.status(404).json({ error: "Employee not found" });
     }
 
-    return res
-      .status(200)
-      .json({ message: "Event unreported successfully", employee });
-  } catch (err) {
-    console.error("Error unreporting event:", err.message);
-    return res
-      .status(500)
-      .json({ error: "An error occurred while unreporting the event." });
+    // Remove eventId from CompletedEvents
+    employee.CompletedEvents = employee.CompletedEvents.filter(
+      (event) => event.toString() !== eventId
+    );
+    await employee.save();
+
+    res.status(200).json({ message: "Employee unreported successfully" });
+  } catch (error) {
+    console.error("Error unreporting employee:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 const makeAdmin = async (req, res) => {
   try {

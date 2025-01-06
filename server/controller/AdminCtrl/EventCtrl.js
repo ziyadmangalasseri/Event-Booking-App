@@ -37,7 +37,6 @@ const ShowEventPage = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
-
 const EventdetailsPage = async (req, res) => {
   try {
     const eventId = req.params.id;
@@ -67,7 +66,7 @@ const EventdetailsPage = async (req, res) => {
 
       if (event.expirationTime) {
         const expirationTime = new Date(event.expirationTime);
-        event.formattedexpirationTime = expirationTime.toLocaleString("en-IN", {
+        event.formattedExpirationTime = expirationTime.toLocaleString("en-IN", {
           weekday: "short",
           year: "numeric",
           month: "short",
@@ -77,9 +76,13 @@ const EventdetailsPage = async (req, res) => {
           hour12: true,
         });
       }
-    }
 
-    res.render("admin/eventDetailsPage", { event });
+      return res.status(200).json({ success: true, event });
+    } else {
+      return res
+        .status(404)
+        .json({ success: false, message: "Event not found" });
+    }
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ success: false, message: "Internal server error" });
@@ -87,25 +90,22 @@ const EventdetailsPage = async (req, res) => {
 };
 
 const EditEventPage = async (req, res) => {
-  try {
-    const eventId = req.params.id;
-    const event = await Event.findById(eventId);
-
-    if (!event) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Event not found" });
-    }
-
-    // Format date and expiration time for input fields
-    event.formattedDate = event.date.toISOString().split("T")[0]; // YYYY-MM-DD for <input type="date">
-    // event.formattedExpirationTime = event.expirationTime.toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM for <input type="datetime-local">
-
-    res.render("admin/editEventPage", { event });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ success: false, message: "Internal server error" });
-  }
+  // try {
+  //   const eventId = req.params.id;
+  //   const event = await Event.findById(eventId);
+  //   if (!event) {
+  //     return res
+  //       .status(400)
+  //       .json({ success: false, message: "Event not found" });
+  //   }
+  //   // Format date and expiration time for input fields
+  //   event.formattedDate = event.date.toISOString().split("T")[0]; // YYYY-MM-DD for <input type="date">
+  //   // event.formattedExpirationTime = event.expirationTime.toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM for <input type="datetime-local">
+  //   res.render("admin/editEventPage", { event });
+  // } catch (error) {
+  //   console.error(error.message);
+  //   res.status(500).json({ success: false, message: "Internal server error" });
+  // }
 };
 
 const AddEvent = async (req, res) => {
@@ -155,25 +155,31 @@ const EditEvent = async (req, res) => {
       jobTitle,
       jobDescription,
       employerLimit,
-      // expirationTime,
     } = req.body;
 
-    const newEvent = await Event.findByIdAndUpdate(eventId, {
-      place,
-      date,
-      reportingTime,
-      exitTime,
-      jobTitle,
-      jobDescription,
-      employerLimit,
-      // expirationTime,
-    });
-    await newEvent.save();
-    res.status(200).json({
-      success: true,
-      message: "Event successfully edited",
-      redirectUrl: "/showEventPage",
-    });
+    const updatedEvent = await Event.findByIdAndUpdate(
+      eventId,
+      {
+        place,
+        date,
+        reportingTime,
+        exitTime,
+        jobTitle,
+        jobDescription,
+        employerLimit,
+      },
+      { new: true } // To return the updated document
+    );
+
+    if (!updatedEvent) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Event not found" });
+    }
+
+    res
+      .status(200)
+      .json({ success: true, message: "Event successfully edited" });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ success: false, message: "Internal server error" });

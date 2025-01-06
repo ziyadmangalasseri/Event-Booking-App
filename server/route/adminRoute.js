@@ -48,13 +48,13 @@ router.get("/eventDetail/:id", adminisAuthenticated, EventdetailsPage);
 router.get("/showEventPage", adminisAuthenticated, ShowEventPage);
 
 router.get("/event/edit/:id", adminisAuthenticated, EditEventPage);
-router.post("/event/edit/:id", adminisAuthenticated, EditEvent);
+router.put("/editEvent/:id", adminisAuthenticated, EditEvent);
 router.delete(
   "/event/:eventId/employee/:userId",
   adminisAuthenticated,
   removeEmployeeFromEvent
 );
-router.post("/employeeReported/:id", adminisAuthenticated, employeeReported);
+router.put("/employeeReported/:id", adminisAuthenticated, employeeReported);
 router.delete(
   "/employeeUnreported/:id",
   adminisAuthenticated,

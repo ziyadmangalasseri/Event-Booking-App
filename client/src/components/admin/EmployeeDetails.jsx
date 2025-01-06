@@ -15,7 +15,7 @@ const EmployeeDetails = () => {
       try {
         const response = await axios.get(
           `${backendUrl}/showEmployeeDetails/${id}`,
-          { withCredentials:true }
+          { withCredentials: true }
         );
         setEmployee(response.data);
       } catch (error) {
@@ -138,14 +138,15 @@ const EmployeeDetails = () => {
         </div>
         <div className="m-auto flex justify-around py-4 px-1 w-[100%]">
           <button
-            className="bg-yellow-600 w-[30%] text-white px-4 py-2 rounded-lg hover:bg-yellow-400"
+                      className="bg-green-800 w-[30%] text-white px-4 py-2 rounded-lg hover:bg-green-600"
+
             onClick={() => history.back()} // Updated navigation
           >
             Back
           </button>
           <Link
             to={`/editEmployee/${id}`}
-            className="bg-green-800 w-[30%] text-white px-4 py-2 rounded-lg hover:bg-green-600"
+            className="bg-yellow-700 w-[30%] text-white px-4 py-2 rounded-lg hover:bg-yellow-400"
           >
             Edit
           </Link>

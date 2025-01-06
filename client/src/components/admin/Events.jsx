@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const EventList = () => {
@@ -33,13 +33,13 @@ const EventList = () => {
   return (
     <div>
       <div className="text-center py-4">
-        <h3 className="text-center text-2xl font-bold mb-6">Event List</h3>
+        <h3 className="text-center text-2xl font-bold mb-2">Event List</h3>
       </div>
-      <div className="bg-black/60 p-5 h-[450px] flex flex-col overflow-y-auto scrollbar-none">
+      <div className="bg-black/60 p-5 h-[470px] flex flex-col overflow-y-auto scrollbar-none">
         {events.length > 0 ? (
           events.map((event) => (
-            <a
-              href={`/eventDetail/${event._id}`}
+            <Link
+              to={`/eventDetails/${event._id}`}
               key={event._id}
               className="block text-gray-800 hover:text-gray-900 py-2"
             >
@@ -49,13 +49,13 @@ const EventList = () => {
                   <p className="text-sm text-gray-300">{event.formattedDate}</p>
                 </div>
               </div>
-            </a>
+            </Link>
           ))
         ) : (
           <p className="text-center text-gray-500">No events available.</p>
         )}
       </div>
-      <div className="m-auto flex justify-between p-4 w-[90%]">
+      <div className="m-auto flex justify-between p-3 w-[90%]">
         <div className="w-2/5 bg-green-700 text-white text-center p-2 m-auto rounded-xl hover:bg-green-500">
           <button
             type="button"
