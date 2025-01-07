@@ -12,6 +12,7 @@ const AddEvent = () => {
     jobDescription: "",
     employerLimit: "",
   });
+
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
   const handleChange = (e) => {
@@ -21,13 +22,25 @@ const AddEvent = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(`${backendUrl}/addEvent`, formData);
+      const token = localStorage.getItem("jwtToken"); // Assuming the JWT is stored in localStorage
+
+      const response = await axios.post(
+        `${backendUrl}/addEvent`,
+        formData,
+        { withCredentials : true,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // JWT token for authorization
+          },
+        }
+      );
+
       Swal.fire({
         icon: response.data.success ? "success" : "error",
         title: response.data.success ? "Success" : "Error",
         text: response.data.message || "Something went wrong.",
       }).then(() => {
-        if (response.data.redirectUrl) window.location.href = response.data.redirectUrl;
+        if (response.data.success === true) history.back();
       });
     } catch (error) {
       Swal.fire("Error", "An error occurred while creating the event.", "error");

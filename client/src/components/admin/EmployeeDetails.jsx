@@ -13,9 +13,16 @@ const EmployeeDetails = () => {
   useEffect(() => {
     const fetchEmployeeDetails = async () => {
       try {
+        const token = localStorage.getItem("jwtToken");
+        if (!token) throw new Error("No token found. Please log in.");
         const response = await axios.get(
           `${backendUrl}/showEmployeeDetails/${id}`,
-          { withCredentials: true }
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setEmployee(response.data);
       } catch (error) {
@@ -39,8 +46,17 @@ const EmployeeDetails = () => {
 
     if (confirmation.isConfirmed) {
       try {
+        const token = localStorage.getItem("jwtToken");
+        if (!token) throw new Error("No token found. Please log in.");
+
         const response = await axios.delete(
-          `${backendUrl}/deleteEmployee/${id}`
+          `${backendUrl}/deleteEmployee/${id}`,
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (response.status === 200) {
           await Swal.fire({
@@ -48,7 +64,7 @@ const EmployeeDetails = () => {
             text: "Employee has been deleted.",
             icon: "success",
           });
-          navigate("/showemployeespage");
+          history.back()
         }
       } catch (error) {
         console.error("Error deleting employee:", error);
@@ -138,8 +154,7 @@ const EmployeeDetails = () => {
         </div>
         <div className="m-auto flex justify-around py-4 px-1 w-[100%]">
           <button
-                      className="bg-green-800 w-[30%] text-white px-4 py-2 rounded-lg hover:bg-green-600"
-
+            className="bg-green-800 w-[30%] text-white px-4 py-2 rounded-lg hover:bg-green-600"
             onClick={() => history.back()} // Updated navigation
           >
             Back

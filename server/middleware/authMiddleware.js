@@ -1,19 +1,32 @@
-const isAuthenticated = (req, res, next) => {
+const { verifyToken } = require("../utils/jwt");
+
+// Middleware to check authentication and role
+const isAuthenticated = (requiredRole) => {
+  return (req, res, next) => {
     const token = req.header("Authorization")?.replace("Bearer ", "");
-    console.log("Token received:", token);
-  
     if (!token) {
       return res.status(401).json({ message: "No token, authorization denied" });
     }
-  
+
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("Decoded token:", decoded);
-      req.user = decoded;
-      next();
+      const decoded = verifyToken(token);
+      req.user = decoded; // Attach decoded token to request
+
+      // Check if the user's role matches the required role
+      if (requiredRole && req.user.role !== requiredRole) {
+        return res.status(403).json({ message: "Forbidden: Insufficient privileges" });
+      }
+
+      next(); // Proceed to the next middleware or route
     } catch (err) {
-      console.error("Token verification failed:", err.message);
-      return res.status(401).json({ message: "Token is not valid" });
+      console.error("Error verifying token:", err.message);
+      const errorMessage =
+        err.message === "jwt expired"
+          ? "Token expired, please log in again"
+          : "Invalid token";
+      return res.status(401).json({ message: errorMessage });
     }
   };
-  
+};
+
+module.exports = { isAuthenticated };

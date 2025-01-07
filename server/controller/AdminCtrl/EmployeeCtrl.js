@@ -39,11 +39,12 @@ const addEmployee = async (req, res) => {
     if (existingEmployee) {
       return res
         .status(409)
-        .send(
-          `Employee with ${
+        .json({
+          success: false,
+          message: `Employee with ${
             existingEmployee.userId === userId ? "UserId" : "Phone Number"
-          } already exists`
-        );
+          } already exists`,
+        });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -60,7 +61,9 @@ const addEmployee = async (req, res) => {
     });
 
     await newEmployee.save();
-    res.status(200).json({ redirectURL: "/dashboard" });
+    res
+      .status(200)
+      .json({ success: true, message: "Employee Added successfully" });
   } catch (err) {
     res.status(500).send(`Error Adding Employee: ${err.message}`);
   }
@@ -289,7 +292,7 @@ const updatePassword = async (req, res) => {
 const employeeReported = async (req, res) => {
   try {
     const { id } = req.params; // employeeId
-    const { eventId } = req.query; 
+    const { eventId } = req.query;
 
     const employee = await EmployeeModel.findOneAndUpdate(
       { _id: id },
@@ -301,10 +304,14 @@ const employeeReported = async (req, res) => {
       return res.status(404).json({ error: "Employee not found" });
     }
 
-    return res.status(200).json({ message: "Event marked as completed", employee });
+    return res
+      .status(200)
+      .json({ message: "Event marked as completed", employee });
   } catch (err) {
     console.error("Error marking event as completed:", err.message);
-    return res.status(500).json({ error: "An error occurred while updating the event." });
+    return res
+      .status(500)
+      .json({ error: "An error occurred while updating the event." });
   }
 };
 
@@ -312,7 +319,7 @@ const unReportEmployee = async (req, res) => {
   try {
     const { id } = req.params; // employeeId
     const { eventId } = req.query; // eventId from query string
-    
+
     if (!eventId) {
       return res.status(400).json({ error: "Event ID is required" });
     }
@@ -335,7 +342,6 @@ const unReportEmployee = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 const makeAdmin = async (req, res) => {
   try {

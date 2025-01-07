@@ -14,14 +14,19 @@ const EventDetails = () => {
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
+        const token = localStorage.getItem("jwtToken"); // Get JWT token from localStorage
+        if (!token) throw new Error("No token found. Please log in.");
+
         // Fetch event details from backend
         const response = await axios.get(`${backendUrl}/eventDetail/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add JWT token to the request header
+          },
           withCredentials: true, // Include cookies
         });
 
         // Update state with fetched data
         setEvent(response.data.event);
-        // console.log(response.data.event);
       } catch (error) {
         console.error("Failed to fetch event data", error);
       }
@@ -43,7 +48,15 @@ const EventDetails = () => {
 
     if (confirmation.isConfirmed) {
       try {
-        const response = await axios.delete(`${backendUrl}/deleteEvent/${id}`);
+        const token = localStorage.getItem("jwtToken"); // Get JWT token from localStorage
+        if (!token) throw new Error("No token found. Please log in.");
+
+        const response = await axios.delete(`${backendUrl}/event/delete/${id}`, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`, // Add JWT token to the request header
+          },
+        });
         if (response.status === 200) {
           await Swal.fire("Deleted!", "Event has been deleted.", "success");
           navigate("/events"); // Navigate to event list page
@@ -68,11 +81,18 @@ const EventDetails = () => {
 
     if (confirmation.isConfirmed) {
       try {
+        const token = localStorage.getItem("jwtToken"); // Get JWT token from localStorage
+        if (!token) throw new Error("No token found. Please log in.");
+
         const response = await axios.delete(
           `${backendUrl}/event/${eventId}/employee/${userId}`,
-          { withCredentials: true }
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add JWT token to the request header
+            },
+            withCredentials: true,
+          }
         );
-        const result = await response.data;
         if (response.status === 200) {
           await Swal.fire(
             "Removed!",
@@ -86,11 +106,7 @@ const EventDetails = () => {
             ),
           }));
         } else {
-          await Swal.fire(
-            "Error!",
-            result.error || "Failed to remove employee.",
-            "error"
-          );
+          await Swal.fire("Error!", "Failed to remove employee.", "error");
         }
       } catch (error) {
         console.error("Error removing employee:", error);
@@ -105,14 +121,20 @@ const EventDetails = () => {
 
   const addCompletedEvents = async (userId, eventId) => {
     try {
+      const token = localStorage.getItem("jwtToken"); // Get JWT token from localStorage
+      if (!token) throw new Error("No token found. Please log in.");
+
       const response = await axios.put(
         `${backendUrl}/employeeReported/${userId}?eventId=${eventId}`,
         {},
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add JWT token to the request header
+          },
+          withCredentials: true,
+        }
       );
-      const result = await response.data;
       if (response.status === 200) {
-        // await Swal.fire("Success!", "Event marked as completed.", "success");
         setEvent((prevEvent) => ({
           ...prevEvent,
           currentEmployers: prevEvent.currentEmployers.map((employer) =>
@@ -127,7 +149,7 @@ const EventDetails = () => {
       } else {
         Swal.fire(
           "Error!",
-          result.error || "Failed to update completed events.",
+          response.data.error || "Failed to update completed events.",
           "error"
         );
       }
@@ -150,9 +172,17 @@ const EventDetails = () => {
 
     if (confirmation.isConfirmed) {
       try {
+        const token = localStorage.getItem("jwtToken"); // Get JWT token from localStorage
+        if (!token) throw new Error("No token found. Please log in.");
+
         const response = await axios.delete(
           `${backendUrl}/employeeUnreported/${userId}?eventId=${eventId}`,
-          { withCredentials: true }
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add JWT token to the request header
+            },
+            withCredentials: true,
+          }
         );
         if (response.status === 200) {
           await Swal.fire(

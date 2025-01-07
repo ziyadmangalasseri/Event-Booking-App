@@ -13,7 +13,7 @@ const EditEmployee = () => {
     JoiningDate: "",
     DateOfBirth: "",
     BloodGroup: "",
-    isAdmin:""
+    isAdmin: "",
   });
 
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
@@ -21,11 +21,18 @@ const EditEmployee = () => {
   useEffect(() => {
     const fetchEmployeeData = async () => {
       try {
+        const token = localStorage.getItem("jwtToken"); // Assuming token is stored in localStorage
+        if (!token) throw new Error("No token found. Please log in.");
+
         const response = await axios.get(`${backendUrl}/editEmployee/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include token in header
+          },
           withCredentials: true,
         });
+
         if (response.status === 200) {
-          const data = await response.data;
+          const data = response.data;
           setFormData({
             name: data.name,
             userId: data.userId,
@@ -38,12 +45,12 @@ const EditEmployee = () => {
               ? new Date(data.DateOfBirth).toISOString().split("T")[0]
               : "",
             BloodGroup: data.BloodGroup,
-            isAdmin:data.isAdmin
+            isAdmin: data.isAdmin,
           });
         } else {
           Swal.fire(
             "Error",
-            data.message || "Failed to fetch employee data",
+            response.data.message || "Failed to fetch employee data",
             "error"
           );
         }
@@ -79,16 +86,21 @@ const EditEmployee = () => {
     }
 
     try {
-      const response = await fetch(`${backendUrl}/editEmployee/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
+      const token = localStorage.getItem("jwtToken");
+      if (!token) throw new Error("No token found. Please log in.");
 
-      const result = await response.json();
+      const response = await axios.put(
+        `${backendUrl}/editEmployee/${id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include token in header
+          },
+          withCredentials: true,
+        }
+      );
 
-      if (response.ok) {
+      if (response.status === 200) {
         Swal.fire(
           "Success",
           "Employee details updated successfully!",
@@ -99,7 +111,7 @@ const EditEmployee = () => {
       } else {
         Swal.fire(
           "Error",
-          result.error || "Failed to update employee details",
+          response.data.error || "Failed to update employee details",
           "error"
         );
       }
@@ -111,18 +123,25 @@ const EditEmployee = () => {
 
   const updateAdminStatus = async (status) => {
     try {
+      const token = localStorage.getItem("jwtToken");
+      if (!token) throw new Error("No token found. Please log in.");
+
       const endpoint = status
         ? `${backendUrl}/makeadmin/${id}`
         : `${backendUrl}/removeadmin/${id}`;
-      const response = await fetch(endpoint, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials : "include"
-      });
 
-      const result = await response.json();
+      const response = await axios.put(
+        endpoint,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include token in header
+          },
+          withCredentials: true,
+        }
+      );
 
-      if (response.ok) {
+      if (response.status === 200) {
         Swal.fire(
           "Success",
           status
@@ -135,7 +154,7 @@ const EditEmployee = () => {
       } else {
         Swal.fire(
           "Error",
-          result.error || "Failed to update admin status",
+          response.data.error || "Failed to update admin status",
           "error"
         );
       }

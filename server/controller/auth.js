@@ -89,27 +89,22 @@ const userLogin = async (req, res) => {
     const findUser = await User.findOne({ userId: userId });
 
     if (!findUser) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid userId" });
+      return res.status(400).json({ success: false, message: "Invalid userId" });
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, findUser.password);
     if (!isPasswordCorrect) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Invalid password" });
+      return res.status(401).json({ success: false, message: "Invalid password" });
     }
 
-    // Generate JWT Token
-    const token = generateToken(findUser._id);
+    // Generate JWT Token with role
+    const role = findUser.isAdmin ? "admin" : "user";
+    const token = generateToken(findUser._id, role);
 
     const response = {
       success: true,
-      message: findUser.isAdmin
-        ? "Admin login successfully"
-        : "User login successfully",
-      redirectUrl: findUser.isAdmin ? "/dashboard" : "/home",
+      message: role === "admin" ? "Admin login successfully" : "User login successfully",
+      redirectUrl: role === "admin" ? "/dashboard" : "/home",
     };
 
     res.status(200).json({ token, response });
@@ -118,5 +113,6 @@ const userLogin = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
 
 module.exports = { login, userLogin, signup, createAccount, logout };

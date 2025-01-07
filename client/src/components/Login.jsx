@@ -29,7 +29,7 @@ const Login = () => {
       const { token, response: serverResponse } = response.data;
       if (serverResponse.success) {
         // Save the JWT token in localStorage
-        localStorage.setItem("authToken", token);
+        localStorage.setItem("jwtToken", token);
 
         // Fetch protected data after login
         fetchProtectedData();
