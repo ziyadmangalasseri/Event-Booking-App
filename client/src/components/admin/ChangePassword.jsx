@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import useAuth from "../utils/jwtChecking";
 
 const ChangePassword = () => {
   const { id } = useParams();
@@ -10,6 +11,8 @@ const ChangePassword = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
+
+  useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -112,7 +112,7 @@ const editEmployeePage = async (req, res) => {
     const employeeId = req.params.id;
     if (employeeId) {
       const employee = await EmployeeModel.findById(employeeId);
-      console.log(employee);
+      // console.log(employee);
 
       if (employee) {
         // Return the employee data

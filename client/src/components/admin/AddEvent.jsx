@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import useAuth from "../utils/jwtChecking";
 
 const AddEvent = () => {
+
   const [formData, setFormData] = useState({
     place: "",
     date: "",
@@ -12,6 +14,8 @@ const AddEvent = () => {
     jobDescription: "",
     employerLimit: "",
   });
+
+ useAuth()
 
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 

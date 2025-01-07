@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
+import useAuth from "../utils/jwtChecking";
 
 const EditEvent = () => {
   const { id } = useParams();
@@ -16,8 +17,8 @@ const EditEvent = () => {
   });
 
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
-  const token = localStorage.getItem("jwtToken");  // Assuming the JWT is stored in localStorage
-
+  const token = localStorage.getItem("jwtToken"); // Assuming the JWT is stored in localStorage
+  useAuth();
   useEffect(() => {
     const fetchEventData = async () => {
       try {
@@ -31,7 +32,9 @@ const EditEvent = () => {
           const data = response.data.event;
           setFormData({
             place: data.place,
-            date: data.date ? new Date(data.date).toISOString().split("T")[0] : "",
+            date: data.date
+              ? new Date(data.date).toISOString().split("T")[0]
+              : "",
             reportingTime: data.reportingTime,
             exitTime: data.exitTime,
             jobTitle: data.jobTitle,
@@ -48,7 +51,7 @@ const EditEvent = () => {
     };
 
     fetchEventData();
-  }, [id, token]);
+  }, [backendUrl, id, token]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -85,11 +88,19 @@ const EditEvent = () => {
       );
 
       if (response.status === 200) {
-        Swal.fire("Success", "Event details updated successfully!", "success").then(() => {
+        Swal.fire(
+          "Success",
+          "Event details updated successfully!",
+          "success"
+        ).then(() => {
           window.history.back();
         });
       } else {
-        Swal.fire("Error", response.data.error || "Failed to update event details", "error");
+        Swal.fire(
+          "Error",
+          response.data.error || "Failed to update event details",
+          "error"
+        );
       }
     } catch (error) {
       console.error(error);
@@ -101,7 +112,9 @@ const EditEvent = () => {
     <div>
       <form onSubmit={handleSubmit}>
         <div className="text-center py-2">
-          <h3 className="text-white text-2xl font-bold m-auto p-3">Edit Event</h3>
+          <h3 className="text-white text-2xl font-bold m-auto p-3">
+            Edit Event
+          </h3>
         </div>
         <div className="bg-black/60 p-10 h-[470px] flex flex-col overflow-y-auto scrollbar-none">
           <div>

@@ -10,10 +10,20 @@ const {generateToken} = require("../utils/jwt")
 const signup = (req, res) => {
   res.render("signup");
 };
-const logout = async (req, res) => {
-  req.session.destroy();
-  res.redirect("/");
+const logout = (req, res) => {
+  try {
+    // console.log("logout start");
+    
+    res.clearCookie("jwtToken"); // Clear token if stored in cookies
+    res.status(200).json({ message: "Logged out successfully." });
+  } catch (err) {
+    console.error("Logout Error:", err.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };
+
+
+
 const createAccount = async (req, res) => {
   try {
     const {

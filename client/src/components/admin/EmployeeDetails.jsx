@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useParams, useNavigate } from "react-router-dom"; // Updated import
@@ -14,7 +14,15 @@ const EmployeeDetails = () => {
     const fetchEmployeeDetails = async () => {
       try {
         const token = localStorage.getItem("jwtToken");
-        if (!token) throw new Error("No token found. Please log in.");
+        if (!token) {
+          Swal.fire({
+            icon: "error",
+            title: "Unauthorized",
+            text: "Please log in to access this page.",
+          }).then(() => {
+            navigate("/"); // Redirect to login page
+          });
+        }
         const response = await axios.get(
           `${backendUrl}/showEmployeeDetails/${id}`,
           {
@@ -31,7 +39,7 @@ const EmployeeDetails = () => {
     };
 
     fetchEmployeeDetails();
-  }, [id]);
+  }, [backendUrl, id, navigate]);
 
   const deleteEmployee = async () => {
     const confirmation = await Swal.fire({
@@ -64,7 +72,7 @@ const EmployeeDetails = () => {
             text: "Employee has been deleted.",
             icon: "success",
           });
-          history.back()
+          history.back();
         }
       } catch (error) {
         console.error("Error deleting employee:", error);

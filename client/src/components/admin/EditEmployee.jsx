@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const EditEmployee = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [formData, setFormData] = useState({
     name: "",
@@ -22,8 +24,15 @@ const EditEmployee = () => {
     const fetchEmployeeData = async () => {
       try {
         const token = localStorage.getItem("jwtToken"); // Assuming token is stored in localStorage
-        if (!token) throw new Error("No token found. Please log in.");
-
+        if (!token) {
+          Swal.fire({
+            icon: "error",
+            title: "Unauthorized",
+            text: "Please log in to access this page.",
+          }).then(() => {
+            navigate("/"); // Redirect to login page
+          });
+        }
         const response = await axios.get(`${backendUrl}/editEmployee/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Include token in header
@@ -59,9 +68,8 @@ const EditEmployee = () => {
         Swal.fire("Error", "An unexpected error occurred", "error");
       }
     };
-
     fetchEmployeeData();
-  }, [id]);
+  }, [backendUrl, id, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
