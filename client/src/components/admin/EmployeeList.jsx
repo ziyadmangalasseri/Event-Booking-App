@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeList = () => {
+  const navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
@@ -12,7 +15,15 @@ const EmployeeList = () => {
     const fetchEmployees = async () => {
       try {
         const token = localStorage.getItem("jwtToken"); // Assuming token is stored in localStorage
-        if (!token) throw new Error("No token found. Please log in.");
+        if (!token) {
+          Swal.fire({
+            icon: "error",
+            title: "Unauthorized",
+            text: "Please log in to access this page.",
+          }).then(() => {
+            navigate("/"); // Redirect to login page
+          });
+        }
         const response = await axios.get(`${backendUrl}/showemployeespage`, {
           withCredentials: true,
 
@@ -29,7 +40,7 @@ const EmployeeList = () => {
     };
 
     fetchEmployees();
-  }, []);
+  }, [backendUrl, navigate]);
 
   const backbutton = () => {
     window.history.back();

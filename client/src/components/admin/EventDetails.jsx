@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -15,8 +15,15 @@ const EventDetails = () => {
     const fetchEventDetails = async () => {
       try {
         const token = localStorage.getItem("jwtToken"); // Get JWT token from localStorage
-        if (!token) throw new Error("No token found. Please log in.");
-
+        if (!token) {
+          Swal.fire({
+            icon: "error",
+            title: "Unauthorized",
+            text: "Please log in to access this page.",
+          }).then(() => {
+            navigate("/"); // Redirect to login page
+          });
+        }
         // Fetch event details from backend
         const response = await axios.get(`${backendUrl}/eventDetail/${id}`, {
           headers: {
@@ -33,7 +40,7 @@ const EventDetails = () => {
     };
 
     fetchEventDetails();
-  }, [id]);
+  }, [backendUrl, id, navigate]);
 
   const deleteEvent = async () => {
     const confirmation = await Swal.fire({
@@ -51,12 +58,15 @@ const EventDetails = () => {
         const token = localStorage.getItem("jwtToken"); // Get JWT token from localStorage
         if (!token) throw new Error("No token found. Please log in.");
 
-        const response = await axios.delete(`${backendUrl}/event/delete/${id}`, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${token}`, // Add JWT token to the request header
-          },
-        });
+        const response = await axios.delete(
+          `${backendUrl}/event/delete/${id}`,
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${token}`, // Add JWT token to the request header
+            },
+          }
+        );
         if (response.status === 200) {
           await Swal.fire("Deleted!", "Event has been deleted.", "success");
           navigate("/events"); // Navigate to event list page

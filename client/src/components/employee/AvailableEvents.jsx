@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +19,7 @@ const AvailableEvents = () => {
       }
     };
     fetchEvents();
-  }, []);
+  }, [backendUrl]);
 
   const handleEventClick = (id) => {
     navigate(`/usereventDetails/${id}`);

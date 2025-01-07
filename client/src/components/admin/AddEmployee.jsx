@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // for navigation after success
+import useAuth from "../utils/jwtChecking";
 
 const AddEmployee = () => {
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
   const navigate = useNavigate(); // To navigate to other pages
+
+
+  useAuth()
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [formData, setFormData] = useState({

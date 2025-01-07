@@ -25,7 +25,7 @@ const BookedEvents = () => {
     };
 
     fetchEvents();
-  }, []);
+  }, [backendUrl]);
 
   return (
     <div>
