@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
-
   // Fetch employees from backend
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await fetch(`${backendUrl}/showemployeespage`, { credentials: "include" }); // Ensure cookies are sent for authentication
-        if (response.ok) {
-          const data = await response.json(); // Assuming backend sends JSON
-          setEmployees(data.employees || []); // Ensure data format matches
-        } else {
-          console.error("Failed to fetch employees.");
-        }
+        const token = localStorage.getItem("jwtToken"); // Assuming token is stored in localStorage
+        if (!token) throw new Error("No token found. Please log in.");
+        const response = await axios.get(`${backendUrl}/showemployeespage`, {
+          withCredentials: true,
+
+          headers: {
+            Authorization: `Bearer ${token}`, // Include token in header
+          },
+        });
+        setEmployees(response.data.employees || []);
       } catch (error) {
         console.error("Error fetching employees:", error);
       } finally {

@@ -1,7 +1,7 @@
 const express = require("express");
-const { adminisAuthenticated } = require("../middleware/isAuthenticated");
-
+const { isAuthenticated } = require("../middleware/authMiddleware");
 const router = express.Router();
+
 const {
   AddEvent,
   ShowEventPage,
@@ -30,41 +30,41 @@ const {
 
 const { dashboard } = require("../controller/AdminCtrl/adminCtrl");
 
-router.get("/addEmployee", adminisAuthenticated, renderEmployeeForm);
-router.post("/addEmployee", adminisAuthenticated, addEmployee);
-router.get("/showemployeespage", adminisAuthenticated, renderallemployees);
-router.get("/showEmployeeDetails/:id", adminisAuthenticated, employeeDetails);
-router.get("/editEmployee/:id", adminisAuthenticated, editEmployeePage);
-router.put("/editEmployee/:id", adminisAuthenticated, editEmployee);
-router.delete("/deleteEmployee/:id", adminisAuthenticated, deleteEmployee);
+// Employee Routes
+router.get("/addEmployee", isAuthenticated("admin"), renderEmployeeForm);
+router.post("/addEmployee", isAuthenticated("admin"), addEmployee);
+router.get("/showemployeespage", isAuthenticated("admin"), renderallemployees);
+router.get("/showEmployeeDetails/:id", isAuthenticated("admin"), employeeDetails);
+router.get("/editEmployee/:id", isAuthenticated("admin"), editEmployeePage);
+router.put("/editEmployee/:id", isAuthenticated("admin"), editEmployee);
+router.delete("/deleteEmployee/:id", isAuthenticated("admin"), deleteEmployee);
 
-router.get("/dashboard", adminisAuthenticated, dashboard);
+// Dashboard Route
+router.get("/dashboard", isAuthenticated("admin"), dashboard);
 
-router.get("/addEventPage", adminisAuthenticated, AddEventPage);
-router.post("/addEvent", adminisAuthenticated, AddEvent);
+// Event Routes
+router.get("/addEventPage", isAuthenticated("admin"), AddEventPage);
+router.post("/addEvent", isAuthenticated("admin"), AddEvent);
 
-router.get("/eventDetail/:id", adminisAuthenticated, EventdetailsPage);
-router.get("/showEventPage", adminisAuthenticated, ShowEventPage);
+router.get("/eventDetail/:id", isAuthenticated("admin"), EventdetailsPage);
+router.get("/showEventPage", isAuthenticated("admin"), ShowEventPage);
 
-router.get("/event/edit/:id", adminisAuthenticated, EditEventPage);
-router.post("/event/edit/:id", adminisAuthenticated, EditEvent);
+router.get("/event/edit/:id", isAuthenticated("admin"), EditEventPage);
+router.put("/event/edit/:id", isAuthenticated("admin"), EditEvent);
 router.delete(
   "/event/:eventId/employee/:userId",
-  adminisAuthenticated,
+  isAuthenticated("admin"),
   removeEmployeeFromEvent
 );
-router.post("/employeeReported/:id", adminisAuthenticated, employeeReported);
-router.delete(
-  "/employeeUnreported/:id",
-  adminisAuthenticated,
-  unReportEmployee
-);
+router.post("/employeeReported/:id", isAuthenticated("admin"), employeeReported);
+router.delete("/employeeUnreported/:id", isAuthenticated("admin"), unReportEmployee);
 
-router.get("/changePassword/:id", adminisAuthenticated, changePassword);
-router.put("/updatePassword/:id", adminisAuthenticated, updatePassword);
-router.put("/makeadmin/:id", adminisAuthenticated, makeAdmin);
-router.put("/removeadmin/:id", adminisAuthenticated, removeAdmin);
+// Password and Admin Management Routes
+router.get("/changePassword/:id", isAuthenticated("admin"), changePassword);
+router.put("/updatePassword/:id", isAuthenticated("admin"), updatePassword);
+router.put("/makeadmin/:id", isAuthenticated("admin"), makeAdmin);
+router.put("/removeadmin/:id", isAuthenticated("admin"), removeAdmin);
 
-router.delete("/event/delete/:id", adminisAuthenticated, DeleteEvent);
+router.delete("/event/delete/:id", isAuthenticated("admin"), DeleteEvent);
 
 module.exports = router;

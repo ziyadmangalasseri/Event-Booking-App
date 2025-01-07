@@ -16,12 +16,16 @@ const EditEvent = () => {
   });
 
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
+  const token = localStorage.getItem("jwtToken");  // Assuming the JWT is stored in localStorage
 
   useEffect(() => {
     const fetchEventData = async () => {
       try {
         const response = await axios.get(`${backendUrl}/eventDetail/${id}`, {
           withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
         if (response.status === 200) {
           const data = response.data.event;
@@ -44,7 +48,7 @@ const EditEvent = () => {
     };
 
     fetchEventData();
-  }, [id]);
+  }, [id, token]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -68,21 +72,24 @@ const EditEvent = () => {
     }
 
     try {
-      const response = await fetch(`${backendUrl}/editEvent/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
+      const response = await axios.put(
+        `${backendUrl}/event/edit/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
 
-      const result = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200) {
         Swal.fire("Success", "Event details updated successfully!", "success").then(() => {
           window.history.back();
         });
       } else {
-        Swal.fire("Error", result.error || "Failed to update event details", "error");
+        Swal.fire("Error", response.data.error || "Failed to update event details", "error");
       }
     } catch (error) {
       console.error(error);

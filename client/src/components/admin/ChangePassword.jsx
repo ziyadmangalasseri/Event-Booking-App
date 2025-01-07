@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const ChangePassword = () => {
   const { id } = useParams();
@@ -19,30 +20,32 @@ const ChangePassword = () => {
     }
 
     try {
-      const response = await fetch(
+      const token = localStorage.getItem("jwtToken"); // Assuming token is stored in localStorage
+      if (!token) throw new Error("No token found. Please log in.");
+
+      const response = await axios.put(
         `${backendUrl}/updatePassword/${id}`,
+        { newPassword },
         {
-          method: "PUT",
+          withCredentials: true,
           headers: {
-            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Include token in header
           },
-          body: JSON.stringify({ newPassword }),
-          credentials: "include",
-        }
+        } // Ensure cookies are sent if required
       );
 
-      const result = await response.json();
-
-      if (response.ok) {
-        Swal.fire("Success", result.message, "success").then(() => {
+      if (response.status === 200) {
+        Swal.fire("Success", response.data.message, "success").then(() => {
           history.back();
         });
-      } else {
-        Swal.fire("Error", result.error || "An error occurred", "error");
       }
     } catch (err) {
       console.error(err);
-      Swal.fire("Error", "Unable to process the request", "error");
+      Swal.fire(
+        "Error",
+        err.response?.data?.error || "An error occurred",
+        "error"
+      );
     }
   };
 

@@ -119,30 +119,31 @@ const AddEvent = async (req, res) => {
       jobTitle,
       jobDescription,
       employerLimit,
-      // expirationTime,
     } = req.body;
-    // const formattedExpirationTime = new Date(expirationTime);
+
     const newEvent = new Event({
-      place: place,
-      date: date,
-      reportingTime: reportingTime,
-      exitTime: exitTime,
-      jobTitle: jobTitle,
-      jobDescription: jobDescription,
-      employerLimit: employerLimit,
-      // expirationTime: formattedExpirationTime,
+      place,
+      date,
+      reportingTime,
+      exitTime,
+      jobTitle,
+      jobDescription,
+      employerLimit,
+      // createdBy: adminId, // Optionally track who created the event
     });
+
     await newEvent.save();
+
     res.status(200).json({
       success: true,
-      message: "new Event successfully created",
-      redirectUrl: "/showEventPage",
+      message: "New event successfully created",
     });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
 
 const EditEvent = async (req, res) => {
   try {

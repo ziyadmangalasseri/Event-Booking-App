@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const EventList = () => {
   const [events, setEvents] = useState([]);
@@ -8,14 +9,23 @@ const EventList = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch(`${backendUrl}/showEventPage`, {
-          credentials: "include",
+        const token = localStorage.getItem("jwtToken"); // Assuming the JWT token is stored in localStorage
+        if (!token) throw new Error("No token found. Please log in.");
+
+        const response = await axios.get(`${backendUrl}/showEventPage`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include JWT token in the request header
+          },
+          withCredentials: true,
         });
-        if (!response.ok) {
+
+        if (response.status === 200) {
+          setEvents(
+            Array.isArray(response.data.event) ? response.data.event : []
+          );
+        } else {
           throw new Error("Failed to fetch events");
         }
-        const data = await response.json();
-        setEvents(Array.isArray(data.event) ? data.event : []);
       } catch (error) {
         console.error("Error fetching events:", error.message || error);
         setEvents([]);
@@ -40,7 +50,9 @@ const EventList = () => {
             >
               <div className="flex justify-between items-center bg-white/10 rounded-lg p-4 h-[60px]">
                 <div>
-                  <h4 className="text-lg text-white font-semibold">{event.place}</h4>
+                  <h4 className="text-lg text-white font-semibold">
+                    {event.place}
+                  </h4>
                   <p className="text-sm text-gray-300">{event.formattedDate}</p>
                 </div>
               </div>
@@ -52,10 +64,7 @@ const EventList = () => {
       </div>
       <div className="m-auto flex justify-between p-3 w-[90%]">
         <div className="w-2/5 bg-green-700 text-white text-center p-2 m-auto rounded-xl hover:bg-green-500">
-          <button
-            type="button"
-            onClick={() => window.history.back()}
-          >
+          <button type="button" onClick={() => window.history.back()}>
             Home
           </button>
         </div>

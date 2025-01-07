@@ -1,5 +1,5 @@
 const express = require("express");
-const  {userisAuthenticated}  = require("../middleware/isAuthenticated");
+const { isAuthenticated } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 const {
@@ -14,14 +14,15 @@ const {
   userBookedEventDetails,
 } = require("../controller/UserCtrl/EventsCtrl");
 
-router.get("/home",userisAuthenticated, homePage);
-router.get("/userProfile",userisAuthenticated,profilePageDetails);
+// User Routes
+router.get("/home", isAuthenticated("user"), homePage);
+router.get("/userProfile", isAuthenticated("user"), profilePageDetails);
 
-router.get("/upcomingEvents",userisAuthenticated, showEvents);
-router.get("/usereventDetails/:id",userisAuthenticated, userEventDetails);
-router.post("/bookEvent/:id",userisAuthenticated, bookEvent);
-router.get("/userbookedeventDetails/:id",userisAuthenticated,userBookedEventDetails)
+router.get("/upcomingEvents", isAuthenticated("user"), showEvents);
+router.get("/usereventDetails/:id", isAuthenticated("user"), userEventDetails);
+router.post("/bookEvent/:id", isAuthenticated("user"), bookEvent);
+router.get("/userbookedeventDetails/:id", isAuthenticated("user"), userBookedEventDetails);
 
-router.get("/bookedEvents",userisAuthenticated,bookedEvents);
+router.get("/bookedEvents", isAuthenticated("user"), bookedEvents);
 
 module.exports = router;
