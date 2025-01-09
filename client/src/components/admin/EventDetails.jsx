@@ -226,9 +226,7 @@ const EventDetails = () => {
   if (!event) {
     return (
       <div className="text-center py-4">
-        <h3 className="text-red-500">
-          Failed to load event details. Please try again later.
-        </h3>
+        <h3 className="">Loding........... </h3>
       </div>
     );
   }
