@@ -2,7 +2,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter,RouterProvider } from "react-router-dom";
 import { Error } from "./components/Error";
 import Login from "./components/Login";
-import Body from "./components/body";
+import Body from "./components/Body";
 import Dashboard from "./components/admin/Dashboard";
 import EmployeeList from "./components/admin/EmployeeList";
 import Events from "./components/admin/Events";
