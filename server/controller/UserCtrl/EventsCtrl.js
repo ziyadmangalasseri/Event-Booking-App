@@ -7,10 +7,8 @@ const showEvents = async (req, res) => {
     // Fetch all events
     const events = await Event.find();
 
-    // Fetch the logged-in employee's details (assuming req.user contains the authenticated user)
-    const employee = await User.findById(req.session.userDataId).populate(
-      "myEvents"
-    );
+    // Fetch the logged-in employee's details (assuming `req.user` contains the authenticated user)
+    const employee = await User.findById(req.user.userId).populate("myEvents");
 
     // Get IDs of booked events
     const bookedEventIds = employee.myEvents.map((event) =>
@@ -23,21 +21,24 @@ const showEvents = async (req, res) => {
     );
 
     // Format event dates
-    upcomingEvents.forEach((event) => {
+    const formattedEvents = upcomingEvents.map((event) => {
       const date = new Date(event.date);
-      event.formattedDate = date.toLocaleString("en-IN", {
-        weekday: "short",
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
+      return {
+        ...event._doc, // Spread the event properties (specific to Mongoose documents)
+        formattedDate: date.toLocaleString("en-IN", {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        }),
+      };
     });
 
-    // Render the filtered events
-    res.render("user/upcomingEvents", { event: upcomingEvents });
+    // Send events as JSON
+    res.status(200).json({ success: true, event: formattedEvents });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ success: false, message: "Internal Server error" });
@@ -47,13 +48,17 @@ const showEvents = async (req, res) => {
 const userEventDetails = async (req, res) => {
   try {
     const eventId = req.params.id;
+    const userId = req.user.userId;
+
     if (!mongoose.Types.ObjectId.isValid(eventId)) {
       return res
         .status(400)
         .json({ success: false, message: "Invalid event id" });
     }
     const event = await Event.findById(eventId);
-
+    const bookedEvent = event.currentEmployers.includes(userId) ? true : false;
+    // console.log(bookedEvent);
+    
     if (event) {
       const date = new Date(event.date);
       event.formattedDate = date.toLocaleString("en-IN", {
@@ -79,7 +84,7 @@ const userEventDetails = async (req, res) => {
       });
     }
 
-    res.render("user/eventDetails", { event });
+    res.status(200).json({ success: true, event, bookedEvent });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ success: false, message: "Internal server error" });
@@ -131,7 +136,7 @@ const userBookedEventDetails = async (req, res) => {
 const bookEvent = async (req, res) => {
   try {
     const eventId = req.params.id;
-    const userId = req.session?.userDataId;
+    const userId = req.user.userId;
 
     // console.log("User ID:", userId);
     // console.log("Event ID:", eventId);
@@ -179,7 +184,7 @@ const bookEvent = async (req, res) => {
 };
 const bookedEvents = async (req, res) => {
   try {
-    const userId = req.session.userDataId;
+    const userId = req.user.userId;
     if (!userId) {
       return res.status(400).json({ error: "User ID not available" });
     }
@@ -199,7 +204,7 @@ const bookedEvents = async (req, res) => {
     }));
 
     // Always send a valid array
-    res.json({ events: events || [] });
+    res.json({ success: true, events });
   } catch (err) {
     console.error("Error:", err.stack);
     res.status(500).json({ error: "Internal Server Error" });
