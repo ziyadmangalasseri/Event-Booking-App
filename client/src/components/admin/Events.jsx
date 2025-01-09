@@ -35,6 +35,8 @@ const EventList = () => {
     fetchEvents();
   }, [backendUrl]);
 
+  const currentDate = new Date();
+
   return (
     <div>
       <div className="text-center py-4">
@@ -42,22 +44,36 @@ const EventList = () => {
       </div>
       <div className="bg-black/60 p-5 h-[470px] flex flex-col overflow-y-auto scrollbar-none">
         {Array.isArray(events) && events.length > 0 ? (
-          events.map((event) => (
-            <Link
-              to={`/eventDetails/${event._id}`}
-              key={event._id}
-              className="block text-gray-800 hover:text-gray-900 py-2"
-            >
-              <div className="flex justify-between items-center bg-white/10 rounded-lg p-4 h-[60px]">
-                <div>
-                  <h4 className="text-lg text-white font-semibold">
-                    {event.place}
-                  </h4>
-                  <p className="text-sm text-gray-300">{event.formattedDate}</p>
-                </div>
-              </div>
-            </Link>
-          ))
+          events
+            .slice()
+            .reverse()
+            .map((event) => {
+              const eventDate = new Date(event.date); // Parse the event date
+              return (
+                <Link
+                  to={`/eventDetails/${event._id}`}
+                  key={event._id}
+                  className="block text-gray-800 hover:text-gray-900 py-2"
+                >
+                  <div className="flex justify-between items-center bg-white/10 rounded-lg p-4 h-[60px] overflow-hidden">
+                    <div>
+                      <h4 className="text-lg text-white font-semibold">
+                        {event.place.length > 20
+                          ? `${event.place.slice(0, 20)}...`
+                          : event.place}
+                      </h4>
+
+                      <p className="text-sm text-gray-300">
+                        {event.formattedDate}
+                      </p>
+                    </div>
+                    {currentDate >= eventDate && (
+                      <div className="text-2xl">✅</div>
+                    )}
+                  </div>
+                </Link>
+              );
+            })
         ) : (
           <p className="text-center text-gray-500">No events available.</p>
         )}

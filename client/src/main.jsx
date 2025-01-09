@@ -4,7 +4,6 @@ import { Error } from "./components/Error";
 import Login from "./components/Login";
 import Body from "./components/body";
 import Dashboard from "./components/admin/Dashboard";
-import { Outlet } from "react-router-dom";
 import EmployeeList from "./components/admin/EmployeeList";
 import Events from "./components/admin/Events";
 import AddEmployee from "./components/admin/AddEmployee";
@@ -18,8 +17,7 @@ import EditEmployee from "./components/admin/EditEmployee";
 import ChangePassword from "./components/admin/ChangePassword";
 import EventDetails from "./components/admin/EventDetails";
 import EditEvent from "./components/admin/EditEvent";
-
-
+import UserEventDetails from "./components/employee/UserEventDetails";
 
 
 
@@ -98,6 +96,11 @@ const appRouter = createBrowserRouter([
         path:"/editEvent/:id",
         element:<EditEvent/>,
       },
+      {
+        path:"/usereventDetails/:id",
+        element:<UserEventDetails/>,
+      },
+      
     ],
     errorElement : <Error/>
   },
