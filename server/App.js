@@ -38,7 +38,7 @@ app.use(
 app.use(express.json());
 app.use(cors
   ({
-  origin:["http://localhost:3000","http://localhost:5173"],
+  origin:["http://localhost:3000","https://event-booking-app-89p3.onrender.com"],
   methods:["GET","POST"],
   credentials: true,
   exposedHeaders:["Authorization"]
