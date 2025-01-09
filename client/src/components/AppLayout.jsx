@@ -1,4 +1,4 @@
-import Body from "./body";
+import Body from "./Body";
 import { Outlet } from "react-router-dom";
 
 const AppLayout = () => {
