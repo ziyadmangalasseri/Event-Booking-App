@@ -80,9 +80,9 @@ const EventList = () => {
       </div>
       <div className="m-auto flex justify-between p-3 w-[90%]">
         <div className="w-2/5 bg-green-700 text-white text-center p-2 m-auto rounded-xl hover:bg-green-500">
-          <button type="button" onClick={() => window.history.back()}>
+          <Link to="/dashboard">
             Home
-          </button>
+          </Link>
         </div>
         <div className="w-2/5 bg-blue-700 text-center text-white p-2 m-auto rounded-xl hover:bg-blue-800">
           <Link to="/addEvent">Add Event</Link>
