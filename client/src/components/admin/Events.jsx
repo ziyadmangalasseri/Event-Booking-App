@@ -4,6 +4,7 @@ import axios from "axios";
 
 const EventList = () => {
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
   useEffect(() => {
@@ -35,6 +36,9 @@ const EventList = () => {
     fetchEvents();
   }, [backendUrl]);
 
+  setTimeout(() => {
+    setLoading(false);
+  }, 500);
   const currentDate = new Date();
 
   return (
@@ -74,15 +78,15 @@ const EventList = () => {
                 </Link>
               );
             })
+        ) : loading ? (
+          <p className="text-center text-gray-500">Loading....</p>
         ) : (
           <p className="text-center text-gray-500">No events available.</p>
         )}
       </div>
       <div className="m-auto flex justify-between p-3 w-[90%]">
         <div className="w-2/5 bg-green-700 text-white text-center p-2 m-auto rounded-xl hover:bg-green-500">
-          <Link to="/dashboard">
-            Home
-          </Link>
+          <Link to="/dashboard">Home</Link>
         </div>
         <div className="w-2/5 bg-blue-700 text-center text-white p-2 m-auto rounded-xl hover:bg-blue-800">
           <Link to="/addEvent">Add Event</Link>
