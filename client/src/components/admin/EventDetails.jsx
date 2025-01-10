@@ -134,7 +134,7 @@ const EventDetails = () => {
       const token = localStorage.getItem("jwtToken"); // Get JWT token from localStorage
       if (!token) throw new Error("No token found. Please log in.");
 
-      const response = await axios.put(
+      const response = await axios.post(
         `${backendUrl}/employeeReported/${userId}?eventId=${eventId}`,
         {},
         {

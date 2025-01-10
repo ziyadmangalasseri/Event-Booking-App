@@ -85,7 +85,7 @@ const EmployeeDetails = () => {
     }
   };
 
-  if (!employee) return <div>Loading...</div>;
+  if (!employee) return <div className="text-center py-4"> Loading...</div>;
 
   return (
     <div>
