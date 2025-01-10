@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 const AvailableEvents = () => {
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
   useAuth();
@@ -16,26 +17,32 @@ const AvailableEvents = () => {
         if (!token) {
           throw new Error("No token found. Please log in.");
         }
-  
+
         const response = await axios.get(`${backendUrl}/upcomingEvents`, {
           headers: {
             Authorization: `Bearer ${token}`, // Include JWT token in the request header
-          },withCredentials : true,
+          },
+          withCredentials: true,
         });
-  
+
         if (response.data.success) {
           setEvents(response.data.event || []);
         } else {
           console.error("Failed to fetch events:", response.data.message);
         }
       } catch (error) {
-        console.error("Error fetching events:", error.response?.data || error.message || error);
+        console.error(
+          "Error fetching events:",
+          error.response?.data || error.message || error
+        );
       }
     };
     fetchEvents();
   }, [backendUrl]);
-  
 
+  setTimeout(() => {
+    setLoading(false);
+  }, 500);
   // const handleEventClick = (id) => {
   //   navigate(`/usereventDetails/${id}`);
   // };
@@ -63,6 +70,8 @@ const AvailableEvents = () => {
               </div>
             </Link>
           ))
+        ) : loading ? (
+          <p className="text-center text-gray-500">Loading....</p>
         ) : (
           <p className="text-center text-gray-500">No events available.</p>
         )}

@@ -107,7 +107,7 @@ const AddEvent = () => {
           onClick={handleSubmit}
           className="w-2/5 bg-green-800 text-white p-2 m-auto rounded-xl hover:bg-green-400"
         >
-          Create Event
+          Create
         </button>
       </div>
     </div>

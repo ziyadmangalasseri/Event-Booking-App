@@ -5,6 +5,7 @@ import useAuth from "../utils/jwtChecking";
 
 const BookedEvents = () => {
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
   useAuth();
   useEffect(() => {
@@ -37,6 +38,10 @@ const BookedEvents = () => {
     fetchEvents();
   }, [backendUrl]);
 
+  setTimeout(() => {
+    setLoading(false);
+  }, 500);
+
   return (
     <div>
       <div className="text-center py-4">
@@ -60,6 +65,8 @@ const BookedEvents = () => {
               </div>
             </Link>
           ))
+        ) : loading ? (
+          <p className="text-center text-gray-500"> Loading.....</p>
         ) : (
           <p className="text-center text-gray-500">No events available.</p>
         )}
