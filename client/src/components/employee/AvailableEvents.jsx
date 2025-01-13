@@ -42,10 +42,12 @@ const AvailableEvents = () => {
 
   setTimeout(() => {
     setLoading(false);
-  }, 500);
+  }, 700);
   // const handleEventClick = (id) => {
   //   navigate(`/usereventDetails/${id}`);
   // };
+
+  // const currentDate = new Date();
 
   return (
     <div>
@@ -55,20 +57,25 @@ const AvailableEvents = () => {
       <div className="bg-black/60 p-5 h-[470px] flex flex-col overflow-y-auto scrollbar-none">
         {Array.isArray(events) && events.length > 0 ? (
           events.map((event) => (
-            <Link
-              to={`/usereventDetails/${event._id}`}
-              key={event._id}
-              className="block text-gray-800 hover:text-gray-900 py-2"
-            >
-              <div className="flex justify-between items-center bg-white/10 rounded-lg p-4 h-[60px]">
-                <div>
-                  <h4 className="text-lg text-white font-semibold">
-                    {event.place}
-                  </h4>
-                  <p className="text-sm text-gray-300">{event.formattedDate}</p>
+            // const eventDate = new Date(event.date);
+            event.currentEmployers.length < event.employerLimit && (
+              <Link
+                to={`/usereventDetails/${event._id}`}
+                key={event._id}
+                className="block text-gray-800 hover:text-gray-900 py-2"
+              >
+                <div className="flex justify-between items-center bg-white/10 rounded-lg p-4 h-[60px]">
+                  <div>
+                    <h4 className="text-lg text-white font-semibold">
+                      {event.place}
+                    </h4>
+                    <p className="text-sm text-gray-300">
+                      {event.formattedDate}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            )
           ))
         ) : loading ? (
           <p className="text-center text-gray-500">Loading....</p>
