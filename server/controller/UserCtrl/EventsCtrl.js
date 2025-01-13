@@ -58,7 +58,7 @@ const userEventDetails = async (req, res) => {
     const event = await Event.findById(eventId);
     const bookedEvent = event.currentEmployers.includes(userId) ? true : false;
     // console.log(bookedEvent);
-    
+
     if (event) {
       const date = new Date(event.date);
       event.formattedDate = date.toLocaleString("en-IN", {
@@ -159,6 +159,10 @@ const bookEvent = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
+    }
+
+    if (event.currentEmployers.length >= event.employerLimit) {
+      return res.status(404).json({ error: "Employers is full" });
     }
 
     await Event.findByIdAndUpdate(

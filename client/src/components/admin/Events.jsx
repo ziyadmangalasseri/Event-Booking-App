@@ -38,7 +38,7 @@ const EventList = () => {
 
   setTimeout(() => {
     setLoading(false);
-  }, 500);
+  }, 700);
   const currentDate = new Date();
 
   return (
