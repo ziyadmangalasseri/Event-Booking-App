@@ -3,6 +3,7 @@ node_modules
 server/node_modules
 server/.env
 server/views
+server/public
 
 client/node_modules
 client/.env
