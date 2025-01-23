@@ -42,7 +42,7 @@ const AvailableEvents = () => {
 
   setTimeout(() => {
     setLoading(false);
-  }, 700);
+  }, 3000);
   // const handleEventClick = (id) => {
   //   navigate(`/usereventDetails/${id}`);
   // };

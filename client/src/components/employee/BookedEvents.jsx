@@ -40,7 +40,7 @@ const BookedEvents = () => {
 
   setTimeout(() => {
     setLoading(false);
-  }, 700);
+  }, 3000);
 
   return (
     <div>
