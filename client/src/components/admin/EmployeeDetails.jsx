@@ -85,80 +85,84 @@ const EmployeeDetails = () => {
     }
   };
 
-  if (!employee) return <div className="text-center py-4"> Loading...</div>;
-
   return (
     <div>
       <div className="text-center py-4">
         <h3 className="text-center mb-4 text-2xl">Employee Details</h3>
         <div className="bg-black/60 p-5 h-[470px] flex flex-col overflow-y-auto scrollbar-none">
-          <ul className="w-full flex flex-col justify-center items-center gap-6 my-4">
-            <li className="info-item flex justify-between w-full text-sm">
-              <span className="label font-bold flex-[0.8] text-left text-base">
-                Name
-              </span>
-              <span className="value flex-1 text-left text-white pl-2">
-                : {employee.name}
-              </span>
-            </li>
-            <li className="info-item flex justify-between w-full text-sm">
-              <span className="label font-bold flex-[0.8] text-left text-base">
-                User Id
-              </span>
-              <span className="value flex-1 text-left text-white pl-2">
-                : {employee.userId}
-              </span>
-            </li>
-            <li className="info-item flex justify-between w-full text-sm">
-              <span className="label font-bold flex-[0.8] text-left text-base">
-                Phone Number
-              </span>
-              <span className="value flex-1 text-left text-white pl-2">
-                : {employee.number}
-              </span>
-            </li>
-            <li className="info-item flex justify-between w-full text-sm">
-              <span className="label font-bold flex-[0.8] text-left text-base">
-                Place
-              </span>
-              <span className="value flex-1 text-left text-white pl-2">
-                : {employee.place}
-              </span>
-            </li>
-            <li className="info-item flex justify-between w-full text-sm">
-              <span className="label font-bold flex-[0.8] text-left text-base">
-                Completed Events
-              </span>
-              <span className="value flex-1 text-left text-white pl-2">
-                :{" "}
-                {employee.CompletedEvents ? employee.CompletedEvents.length : 0}
-              </span>
-            </li>
-            <li className="info-item flex justify-between w-full text-sm">
-              <span className="label font-bold flex-[0.8] text-left text-base">
-                Joining Date
-              </span>
-              <span className="value flex-1 text-left text-white pl-2">
-                : {new Date(employee.JoiningDate).toDateString()}
-              </span>
-            </li>
-            <li className="info-item flex justify-between w-full text-sm">
-              <span className="label font-bold flex-[0.8] text-left text-base">
-                Date Of Birth
-              </span>
-              <span className="value flex-1 text-left text-white pl-2">
-                : {new Date(employee.DateOfBirth).toDateString()}
-              </span>
-            </li>
-            <li className="info-item flex justify-between w-full text-sm">
-              <span className="label font-bold flex-[0.8] text-left text-base">
-                Blood Group
-              </span>
-              <span className="value flex-1 text-left text-white pl-2">
-                : {employee.BloodGroup}
-              </span>
-            </li>
-          </ul>
+          {employee ? (
+            <ul className="w-full flex flex-col justify-center items-center gap-6 my-4">
+              <li className="info-item flex justify-between w-full text-sm">
+                <span className="label font-bold flex-[0.8] text-left text-base">
+                  Name
+                </span>
+                <span className="value flex-1 text-left text-white pl-2">
+                  : {employee.name}
+                </span>
+              </li>
+              <li className="info-item flex justify-between w-full text-sm">
+                <span className="label font-bold flex-[0.8] text-left text-base">
+                  User Id
+                </span>
+                <span className="value flex-1 text-left text-white pl-2">
+                  : {employee.userId}
+                </span>
+              </li>
+              <li className="info-item flex justify-between w-full text-sm">
+                <span className="label font-bold flex-[0.8] text-left text-base">
+                  Phone Number
+                </span>
+                <span className="value flex-1 text-left text-white pl-2">
+                  : {employee.number}
+                </span>
+              </li>
+              <li className="info-item flex justify-between w-full text-sm">
+                <span className="label font-bold flex-[0.8] text-left text-base">
+                  Place
+                </span>
+                <span className="value flex-1 text-left text-white pl-2">
+                  : {employee.place}
+                </span>
+              </li>
+              <li className="info-item flex justify-between w-full text-sm">
+                <span className="label font-bold flex-[0.8] text-left text-base">
+                  Completed Events
+                </span>
+                <span className="value flex-1 text-left text-white pl-2">
+                  :{" "}
+                  {employee.CompletedEvents
+                    ? employee.CompletedEvents.length
+                    : 0}
+                </span>
+              </li>
+              <li className="info-item flex justify-between w-full text-sm">
+                <span className="label font-bold flex-[0.8] text-left text-base">
+                  Joining Date
+                </span>
+                <span className="value flex-1 text-left text-white pl-2">
+                  : {new Date(employee.JoiningDate).toDateString()}
+                </span>
+              </li>
+              <li className="info-item flex justify-between w-full text-sm">
+                <span className="label font-bold flex-[0.8] text-left text-base">
+                  Date Of Birth
+                </span>
+                <span className="value flex-1 text-left text-white pl-2">
+                  : {new Date(employee.DateOfBirth).toDateString()}
+                </span>
+              </li>
+              <li className="info-item flex justify-between w-full text-sm">
+                <span className="label font-bold flex-[0.8] text-left text-base">
+                  Blood Group
+                </span>
+                <span className="value flex-1 text-left text-white pl-2">
+                  : {employee.BloodGroup}
+                </span>
+              </li>
+            </ul>
+          ) : (
+            <div className="text-center py-4"> Loading...</div>
+          )}
         </div>
         <div className="m-auto flex justify-around py-4 px-1 w-[100%]">
           <button
