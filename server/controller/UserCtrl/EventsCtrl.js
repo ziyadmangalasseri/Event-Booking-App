@@ -201,7 +201,8 @@ const bookedEvents = async (req, res) => {
     const events = user.myEvents.map((event) => ({
       _id: event._id,
       place: event.place,
-      formattedDate: event.date.toLocaleDateString(),
+      date: event.date.toISOString(),
+      normalDate:event.date.toLocaleDateString(),
       reportingTime: event.reportingTime,
       exitTime: event.exitTime,
       expirationTime: event.expirationTime,
