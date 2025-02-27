@@ -53,7 +53,7 @@ const Dashboard = () => {
             Add Employee
           </button>
         </Link>
-        <Link to="/contact" className="w-11/12 rounded-xl py-1 h-[50px]">
+        <Link className="w-11/12 rounded-xl py-1 h-[50px]">
           <button className="w-full h-full rounded-xl bg-black text-white font-bold py-2 hover:bg-gray-200 hover:text-black active:bg-green-400">
             Contact Us
           </button>
