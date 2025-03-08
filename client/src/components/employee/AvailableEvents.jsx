@@ -9,7 +9,6 @@ const AvailableEvents = () => {
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
   const currentDate = new Date();
 
-
   useAuth();
   // Fetch events from backend
   useEffect(() => {
@@ -49,7 +48,6 @@ const AvailableEvents = () => {
   //   navigate(`/usereventDetails/${id}`);
   // };
 
-
   return (
     <div>
       <div className="text-center py-4">
@@ -60,9 +58,12 @@ const AvailableEvents = () => {
           [...events]
             .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sorting events by date
             .map((event) => {
-              const eventDate = new Date(event.date);
+              const eventDate = new Date(event.date).setHours(0, 0, 0, 0); // Normalize to compare only the date part
+              const today = new Date().setHours(0, 0, 0, 0); // Normalize current date
+
               return (
-                event.currentEmployers.length < event.employerLimit && (
+                event.currentEmployers.length < event.employerLimit &&
+                eventDate >= today &&(
                   <Link
                     to={`/usereventDetails/${event._id}`}
                     key={event._id}
@@ -70,16 +71,15 @@ const AvailableEvents = () => {
                   >
                     <div className="flex justify-between items-center bg-white/10 rounded-lg p-4 h-[60px]">
                       <div>
-                        <h4 className="text-lg text-white font-semibold">
-                          {event.place}
-                        </h4>
+                        <h4 className="text-lg text-white font-semibold overflow-hidden">
+                        {event.place.length > 16 ? event.place.slice(0, 16) + "..." : event.place}                        </h4>
                         <p className="text-sm text-gray-300">
                           {event.formattedDate}
                         </p>
                       </div>
-                      
-                      {currentDate >= eventDate && (
-                        <div className="text-2xl">✅</div>
+
+                      {eventDate == today && (
+                        <div className="text-md text-white">Today</div>
                       )}
                     </div>
                   </Link>
